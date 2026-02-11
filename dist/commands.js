@@ -1,0 +1,2 @@
+Office.actions.associate("openConfirmDialog",function(i){Office.context.ui.displayDialogAsync(window.location.origin+"/confirm.html",{height:60,width:50},function(){return i.completed()})});
+//# sourceMappingURL=commands.js.map

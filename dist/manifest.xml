@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xsi:type="MailApp">
+
+  <!-- ================= IDENTITÉ ================= -->
+  <Id>3ad7e4ad-04fd-4ed7-a53a-da714bd0ae6c</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Banque de France</ProviderName>
+  <DefaultLocale>fr-FR</DefaultLocale>
+
+  <DisplayName DefaultValue="Mail suspect – Hérisson"/>
+  <Description DefaultValue="Signalement de messages suspects"/>
+
+  <!-- ================= ICONES ================= -->
+  <IconUrl DefaultValue="https://www.contoso.com/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://www.contoso.com/assets/icon-128.png"/>
+
+  <SupportUrl DefaultValue="https://www.contoso.com/help"/>
+
+  <!-- ================= DOMAINES ================= -->
+  <AppDomains>
+    <AppDomain>https://localhost:3000</AppDomain>
+  </AppDomains>
+
+  <!-- ================= HÔTE ================= -->
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+
+  <!-- ================= REQUIREMENTS ================= -->
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.3"/>
+    </Sets>
+  </Requirements>
+
+  <!-- ================= FORM SETTINGS (OBLIGATOIRE EXCHANGE) ================= -->
+  <FormSettings>
+    <Form xsi:type="ItemRead">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://www.contoso.com/confirm.html"/>
+        <RequestedHeight>450</RequestedHeight>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+
+  <!-- ================= PERMISSIONS ================= -->
+  <Permissions>ReadItem</Permissions>
+
+  <!-- ================= RÈGLE D’ACTIVATION ================= -->
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
+  </Rule>
+
+  <!-- ================= VERSION OVERRIDES ================= -->
+  <VersionOverrides
+    xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1"
+    xsi:type="VersionOverridesV1_1">
+
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.3">
+        <bt:Set Name="Mailbox"/>
+      </bt:Sets>
+    </Requirements>
+
+    <Hosts>
+      <Host xsi:type="MailHost">
+        <DesktopFormFactor>
+
+          <!-- Fichier JS pour ExecuteFunction -->
+          <FunctionFile resid="Commands.Url"/>
+
+          <!-- ===== BOUTON DANS LA LECTURE DU MESSAGE ===== -->
+          <ExtensionPoint xsi:type="MessageReadCommandSurface">
+            <OfficeTab id="TabDefault">
+
+              <Group id="MailSuspectGroup">
+                <Label resid="GroupLabel"/>
+
+                <Control xsi:type="Button" id="ReportSuspiciousMail">
+                  <Label resid="Button.Label"/>
+                  <Supertip>
+                    <Title resid="Button.Label"/>
+                    <Description resid="Button.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16"/>
+                    <bt:Image size="32" resid="Icon.32x32"/>
+                    <bt:Image size="80" resid="Icon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>openConfirmDialog</FunctionName>
+                  </Action>
+                </Control>
+
+              </Group>
+
+            </OfficeTab>
+          </ExtensionPoint>
+
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+    <!-- ================= RESSOURCES ================= -->
+    <Resources>
+
+      <bt:Images>
+        <bt:Image id="Icon.16x16" DefaultValue="https://www.contoso.com/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://www.contoso.com/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://www.contoso.com/assets/icon-80.png"/>
+      </bt:Images>
+
+      <bt:Urls>
+        <bt:Url id="Commands.Url" DefaultValue="https://www.contoso.com/commands.html"/>
+      </bt:Urls>
+
+      <bt:ShortStrings>
+        <bt:String id="GroupLabel" DefaultValue="Sécurité"/>
+        <bt:String id="Button.Label" DefaultValue="Signaler un mail suspect"/>
+      </bt:ShortStrings>
+
+      <bt:LongStrings>
+        <bt:String id="Button.Tooltip"
+          DefaultValue="Signaler ce message au CERT pour analyse"/>
+      </bt:LongStrings>
+
+    </Resources>
+
+  </VersionOverrides>
+
+</OfficeApp>
