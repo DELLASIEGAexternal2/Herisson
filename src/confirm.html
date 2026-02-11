@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Demande de confirmation - PRODUCTION</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+    <link rel="stylesheet" href="confirm.css">
+</head>
+
+<body>
+
+<header class="header">
+    Demande de confirmation - PRODUCTION - 1.0.0.1
+</header>
+
+<section class="content">
+
+    <p class="intro">
+        Vous êtes sur le point de signaler le message suspect suivant :
+    </p>
+
+    <table class="mail-table">
+        <thead>
+            <tr>
+                <th>Émetteur</th>
+                <th>Objet</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td id="sender">Microsoft au nom de...</td>
+                <td id="subject">Vous avez des tâches en retard</td>
+                <td id="date">16/01/2026 06:40</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p class="warning">
+        En confirmant, ce mail suspect sera envoyé afin d’être analysé.
+    </p>
+
+    <p>
+        <strong>Attention !</strong>  
+        Le bouton <strong>Signaler</strong> n’est pas un anti-spam.  
+        Il génère des alertes traitées manuellement par les analystes du CERT.
+    </p>
+
+    <section class="rules">
+        <strong>Bonnes pratiques de signalement</strong>
+        <ol>
+            <li>Le message ne provient pas d’une adresse interne.</li>
+            <li>L’expéditeur réel ne correspond pas à l’entreprise affichée.</li>
+            <li>Il ne s’agit pas d’un simple spam.</li>
+            <li>Le message contient :
+                <ul>
+                    <li>une ou plusieurs pièces jointes</li>
+                    <li>des liens Internet</li>
+                    <li>une incitation à une action inhabituelle</li>
+                </ul>
+            </li>
+        </ol>
+    </section>
+
+    <label for="comment">Message (facultatif) :</label>
+    <textarea id="comment"></textarea>
+
+</section>
+
+<footer class="footer">
+    <label for="comment">   Confirmez-vous vouloir signaler ce mail ?</label><br>
+
+    <br>
+    
+    <button id="btnYes">Oui</button>
+    <button id="btnNo">Non</button>
+</footer>
+
+<div class="help">Aide</div>
+
+<script src="confirm.js"></script>
+</body>
+</html>
