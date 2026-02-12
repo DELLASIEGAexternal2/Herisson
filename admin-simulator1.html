@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>Simulateur Centre d’administration M365 — Déploiement Outlook Add-in (manifest)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root{
+    --accent:#0a68ff; --accent-soft:#e6f0ff; --danger:#e05252; --ok:#138f3e;
+    --card:#fff; --bg:#f5f6f8; --text:#222; --muted:#666;
+  }
+  body{font-family:Segoe UI,Arial,sans-serif;background:var(--bg);margin:0;padding:24px;color:var(--text)}
+  h1{font-size:20px;margin:0 0 12px}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .step{padding:8px 12px;border-radius:999px;border:1px solid #cfd7e3;background:#fff;color:#333}
+  .step.active{background:var(--accent-soft);border-color:var(--accent);color:#123}
+  .wrap{display:grid;grid-template-columns:1.1fr 1.2fr;gap:16px}
+  .card{background:var(--card);border:1px solid #e2e6ee;border-radius:12px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+  .title{margin:0 0 8px;font-size:16px}
+  .muted{color:var(--muted);font-size:12px}
+  .row{margin:8px 0}
+  .btn{padding:6px 12px;border:1px solid #c5c5c5;background:#fafafa;border-radius:6px;cursor:pointer;transition:.2s}
+  .btn.primary{border-color:var(--accent);background:var(--accent-soft)}
+  .btn:hover{background:#e8f1ff;border-color:#0078d7;box-shadow:0 0 6px rgba(0,120,215,.3)}
+  input[type="text"]{width:100%;padding:8px;border:1px solid #cfd7e3;border-radius:6px}
+  pre{background:#0b1020;color:#e8f6ff;border-radius:8px;padding:10px;overflow:auto;font-size:12px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid #cfd7e3;background:#fff;margin-right:6px}
+  .pill.ok{border-color:#bfe4c9;background:#eefaf1;color:#0c5128}
+  .pill.warn{border-color:#ffd1c9;background:#fff3f0;color:#7a1b12}
+  .check{margin:0;padding:8px 10px;border:1px dashed #cfd7e3;border-radius:8px;background:#fbfcff}
+  .rightCol{display:flex;flex-direction:column;gap:16px}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .list{border:1px solid #e2e6ee;border-radius:8px;overflow:hidden}
+  .list .item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-top:1px solid #f0f2f6}
+  .list .item:first-child{border-top:none}
+  .src{font-family:Consolas,monospace;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .icon{width:20px;height:20px;border-radius:4px;border:1px solid #e2e6ee;background:#f8f9fb;display:inline-flex;align-items:center;justify-content:center}
+  .badge{font-size:11px;padding:2px 6px;border:1px solid #cfd7e3;border-radius:999px}
+  .badge.err{border-color:#ffc6c6;background:#fff1f1;color:#6b1010}
+  .badge.ok{border-color:#bfe4c9;background:#eefaf1;color:#0c5128}
+  .ribbon{display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid #e2e6ee;padding-bottom:6px;margin-bottom:8px}
+  .grp{background:#f6f9ff;border:1px solid #dbe8ff;border-radius:8px;padding:6px 8px;display:flex;gap:6px;align-items:center}
+  .btnRibbon{display:inline-flex;gap:6px;align-items:center;padding:4px 8px;border:1px solid #cfe0ff;border-radius:6px;background:#fff;cursor:pointer}
+  .btnRibbon img{width:16px;height:16px;image-rendering:auto}
+  iframe{width:380px;height:600px;border:1px solid #ccc;border-radius:10px}
+  .actions{display:flex;gap:8px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+  <h1>Simulateur “Integrated apps” — Déploiement Outlook Web Add‑in via <em>manifest.xml</em></h1>
+  <div class="bar">
+    <span class="step active" id="st1">1) Import du manifeste</span>
+    <span class="step" id="st2">2) Validation & Analyse</span>
+    <span class="step" id="st3">3) Sécurité & Gouvernance</span>
+    <span class="step" id="st4">4) Portée (simulation)</span>
+    <span class="step" id="st5">5) Preview & Ruban (depuis le manifeste)</span>
+    <span class="step" id="st6">6) Rapport</span>
+  </div>
+
+  <div class="wrap">
+    <!-- Colonne gauche -->
+    <div class="leftCol">
+      <div class="card">
+        <h2 class="title">1) Charger le manifeste</h2>
+        <div class="row actions">
+          <label class="btn">
+            📁 Uploader manifest.xml
+            <input type="file" id="manifestFile" accept=".xml" hidden>
+          </label>
+          <button class="btn" id="pasteUrlBtn">📌 Coller une URL du presse‑papiers</button>
+        </div>
+        <div class="row">
+          <div class="muted">…ou indiquer l’URL publique (GitHub <b>Raw</b> conseillé)</div>
+          <input id="manifestUrl" type="text"
+                 placeholder="https://raw.githubusercontent.com/&lt;user&gt;/&lt;repo&gt;/&lt;branch&gt;/path/manifest.xml" />
+        </div>
+        <div class="row actions">
+          <button class="btn primary" id="btnFetch">Valider et analyser</button>
+        </div>
+        <div class="muted">
+          Référence : import via **Integrated apps** (upload manifeste, affectation, propagation) dans le vrai M365 Admin Center. <!-- cite -->
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="title">2) Résultats d’analyse (manifeste)</h2>
+        <div id="analysis" class="muted">En attente de chargement du manifeste…</div>
+        <div class="row">
+          <h3 class="title">Fichiers HTML détectés (SourceLocation)</h3>
+          <div id="srcList" class="list"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="title">3) Sécurité, Permissions & Domaines</h2>
+        <div id="gov"></div>
+        <div class="row">
+          <h3 class="title">Icônes détectées</h3>
+          <div id="icons" class="list"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="title">4) Portée & Affectation (simulation)</h2>
+        <div class="grid">
+          <div>
+            <div class="muted">Qui a accès ?</div>
+            <label><input type="radio" name="scope" value="everyone" checked> Toute l’organisation</label><br/>
+            <label><input type="radio" name="scope" value="groups"> Groupes spécifiques</label><br/>
+            <label><input type="radio" name="scope" value="users"> Utilisateurs spécifiques</label>
+          </div>
+          <div>
+            <div class="muted">Mode</div>
+            <label><input type="radio" name="mode" value="fixed" checked> Assignation fixe</label><br/>
+            <label><input type="radio" name="mode" value="optional"> Optionnel</label>
+          </div>
+        </div>
+        <div class="row">
+          <button class="btn" id="btnSimDeploy">Déployer (simulé)</button>
+          <span id="deployMsg" class="muted"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne droite -->
+    <div class="rightCol">
+      <div class="card">
+        <h2 class="title">5) Faux ruban (VersionOverrides) & Preview</h2>
+        <div id="ribbon" class="ribbon"></div>
+        <div class="split">
+          <div>
+            <div class="row check">
+              <b>Source active</b> : <span id="srcActive" class="muted">—</span>
+            </div>
+            <iframe id="pane" title="Taskpane Preview (simulé)"></iframe>
+          </div>
+          <div>
+            <h3 class="title">Icônes des commandes</h3>
+            <div id="cmdIcons" class="list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="title">Manifeste (XML) — aperçu</h2>
+        <pre id="xmlPreview">// en attente…</pre>
+      </div>
+
+      <div class="card">
+        <h2 class="title">6) Rapport</h2>
+        <div class="actions">
+          <button class="btn" id="btnExportJson">Exporter JSON</button>
+          <button class="btn" id="btnExportHtml">Exporter HTML</button>
+        </div>
+        <div class="muted">Le rapport compile : métadonnées, permissions, requirements, domaines, icônes, commandes, contrôles “Marketplace”.</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const q = s => document.querySelector(s);
+  const analysisEl = q('#analysis');
+  const govEl = q('#gov');
+  const srcList = q('#srcList');
+  const iconsList = q('#icons');
+  const cmdIconsList = q('#cmdIcons');
+  const ribbon = q('#ribbon');
+  const srcActive = q('#srcActive');
+  const pane = q('#pane');
+  const xmlPreview = q('#xmlPreview');
+
+  let manifestText = '';
+  let model = null;
+
+  function setStep(n){
+    ['#st1','#st2','#st3','#st4','#st5','#st6'].forEach((id,i)=> {
+      const el = q(id);
+      if(!el) return;
+      el.classList.toggle('active', i === (n-1));
+    });
+  }
+
+  // ===== Helpers XML (indépendant des namespaces) =====
+  function sel(el, path){
+    const parts = path.split('/');
+    let cur = el;
+    for(const p of parts){
+      let found = null;
+      for(const node of cur.children){
+        if(node.localName === p){ found = node; break; }
+      }
+      if(!found) return null;
+      cur = found;
+    }
+    return cur;
+  }
+  function findAll(el, tagLocalName){
+    return Array.from(el.getElementsByTagName('*')).filter(n => n.localName===tagLocalName);
+  }
+  const getAttr = (n, a, d='') => n? (n.getAttribute(a) ?? d) : d;
+  const getText = (n, d='') => n? (n.textContent?.trim() ?? d) : d;
+
+  // ===== Analyse du manifeste =====
+  function parseManifest(doc){
+    const OfficeApp = doc.documentElement;
+    const Id = getText(sel(OfficeApp,'Id'));
+    const Version = getText(sel(OfficeApp,'Version'));
+    const ProviderName = getText(sel(OfficeApp,'ProviderName'));
+    const DisplayName = getAttr(sel(OfficeApp,'DisplayName'),'DefaultValue');
+    const Description = getAttr(sel(OfficeApp,'Description'),'DefaultValue');
+
+    // Hosts
+    const hostsNode = sel(OfficeApp,'Hosts');
+    const hosts = hostsNode ? findAll(hostsNode,'Host').map(n => getAttr(n,'Name')).filter(Boolean) : [];
+
+    // Requirements
+    const reqNode = sel(OfficeApp,'Requirements');
+    let minMailbox = '';
+    if(reqNode){
+      const set = findAll(reqNode,'Set').find(n => (getAttr(n,'Name')||'').toLowerCase()==='mailbox');
+      minMailbox = set ? (getAttr(set,'MinVersion') || '') : '';
+    }
+
+    // Permissions
+    const permission = getText(sel(OfficeApp,'Permissions'),'');
+    const permMap = {
+      'Restricted': {lvl:'Faible',note:'Accès très limité'},
+      'ReadItem': {lvl:'Standard',note:'Lecture item'},
+      'ReadWriteItem': {lvl:'Élevé',note:'Lecture/écriture item'},
+      'ReadWriteMailbox': {lvl:'Très élevé',note:'Création/écriture boîte + EWS'}
+    };
+    const permInfo = permMap[permission] || {lvl:'Inconnu',note:'—'};
+
+    // AppDomains
+    const appDomainsNode = sel(OfficeApp,'AppDomains');
+    const appDomains = appDomainsNode ? findAll(appDomainsNode,'AppDomain').map(n => getText(n)).filter(Boolean) : [];
+
+    // Top-level icons
+    const topIcons = [
+      {kind:'IconUrl', url:getAttr(sel(OfficeApp,'IconUrl'),'DefaultValue')},
+      {kind:'HighResolutionIconUrl', url:getAttr(sel(OfficeApp,'HighResolutionIconUrl'),'DefaultValue')}
+    ].filter(x => !!x.url);
+
+    // FormSettings → SourceLocation (fallback)
+    const sourceLocations = [];
+    const fs = sel(OfficeApp,'FormSettings');
+    if(fs){
+      const forms = findAll(fs,'Form');
+      forms.forEach(f=>{
+        const ds = sel(f,'DesktopSettings');
+        const sl = ds ? sel(ds,'SourceLocation') : null;
+        const url = sl ? getAttr(sl,'DefaultValue') : '';
+        if(url) sourceLocations.push({origin:'FormSettings', url});
+      });
+    }
+
+    // VersionOverrides: commands, taskpane sources, resources (images/icons)
+    const vo = Array.from(OfficeApp.getElementsByTagName('*'))
+      .find(n => (n.localName||'').toLowerCase().includes('versionoverrides'));
+    const commands = [];
+    const resImages = [];
+    if(vo){
+      // Resources / Images
+      const resources = findAll(vo,'Resources')[0];
+      if(resources){
+        const imgNodes = Array.from(resources.getElementsByTagName('*'))
+          .filter(n => n.localName==='Image');
+        imgNodes.forEach(img=>{
+          resImages.push({
+            id: getAttr(img,'id'),
+            url: getAttr(img,'DefaultValue')
+          });
+        });
+      }
+
+      // FunctionFile (utile pour certaines actions)
+      const fnFiles = findAll(vo,'FunctionFile').map(n => getAttr(n,'Resid')||getAttr(n,'DefaultValue'));
+      // ExtensionPoints (CommandSurface, etc.)
+      const extPoints = Array.from(vo.getElementsByTagName('*'))
+        .filter(n => n.localName==='ExtensionPoint');
+      extPoints.forEach(ep=>{
+        const type = getAttr(ep,'xsi:type') || getAttr(ep,'Type') || '';
+        // OfficeTab/Group/Control
+        const tabs = findAll(ep,'OfficeTab');
+        tabs.forEach(tab=>{
+          const groups = findAll(tab,'Group');
+          groups.forEach(g=>{
+            const grpLabel = getAttr(g,'Label') || getAttr(g,'LabelResid') || '';
+            const controls = Array.from(g.children).filter(c=>c.localName==='Control');
+            controls.forEach(ctrl=>{
+              const ctrlType = getAttr(ctrl,'xsi:type') || getAttr(ctrl,'Type') || 'Button';
+              const id = getAttr(ctrl,'id') || getAttr(ctrl,'Id') || '';
+              // Label / Tooltip (directs ou via resid)
+              const label = getAttr(ctrl,'Label') || getAttr(ctrl,'LabelResid') || id;
+              // Icon: <bt:Icon> -> <bt:Image size="16|32|80" resid="...">
+              const iconNode = Array.from(ctrl.children).find(n=>n.localName==='Icon');
+              const iconRes = [];
+              if(iconNode){
+                Array.from(iconNode.children).forEach(im=>{
+                  if(im.localName==='Image'){
+                    iconRes.push({size:getAttr(im,'size'), resid:getAttr(im,'resid')});
+                  }
+                });
+              }
+              // Action → ShowTaskpane → SourceLocation
+              let actionUrl = '';
+              const action = Array.from(ctrl.children).find(n=>n.localName==='Action');
+              if(action){
+                const show = Array.from(action.children).find(n=>n.localName==='ShowTaskpane');
+                if(show){
+                  const sl = Array.from(show.children).find(n=>n.localName==='SourceLocation');
+                  actionUrl = sl ? (getAttr(sl,'DefaultValue') || '') : '';
+                }
+              }
+              if(actionUrl) sourceLocations.push({origin:'Command', url:actionUrl});
+              commands.push({type, id, label, group:grpLabel, actionUrl, iconRes});
+            });
+          });
+        });
+      });
+    }
+
+    // Déduire les icônes réelles à partir des resid
+    function resolveIcon(resid){
+      const found = resImages.find(i => i.id===resid);
+      return found ? found.url : '';
+    }
+    const commandIcons = [];
+    commands.forEach(c=>{
+      (c.iconRes||[]).forEach(ir=>{
+        commandIcons.push({cmd:c.id, size:ir.size||'', url: resolveIcon(ir.resid)});
+      });
+    });
+
+    // Déduire si HTTPS
+    const httpsOk = sourceLocations.every(s => /^https:\/\//i.test(s.url));
+
+    return {
+      meta:{Id,Version,ProviderName,DisplayName,Description},
+      hosts, minMailbox, permission, permInfo, appDomains,
+      topIcons, resImages, commands, commandIcons,
+      sourceLocations, httpsOk, hasVO: !!vo
+    };
+  }
+
+  // ===== Rendu UI =====
+  function renderAnalysis(m){
+    const a = [];
+    a.push(`<div class="row"><b>${m.meta.DisplayName||'(sans nom)'}</b> — v${m.meta.Version||'?'}</div>`);
+    a.push(`<div class="row muted">ID : <code>${m.meta.Id||'?'}</code> · Éditeur : ${m.meta.ProviderName||'?'}</div>`);
+    a.push(`<div class="row">
+      <span class="pill">Hosts : ${m.hosts.join(', ')||'—'}</span>
+      <span class="pill">Mailbox ≥ ${m.minMailbox||'—'}</span>
+      <span class="pill ${m.httpsOk?'ok':'warn'}">Sources HTTPS : ${m.httpsOk?'OK':'NON'}</span>
+      <span class="pill">VersionOverrides : ${m.hasVO?'oui':'non'}</span>
+    </div>`);
+    if(m.meta.Description){
+      a.push(`<div class="row muted">${m.meta.Description}</div>`);
+    }
+    analysisEl.innerHTML = a.join('\n');
+
+    // Liste des SourceLocation
+    srcList.innerHTML = '';
+    const uniq = [];
+    m.sourceLocations.forEach((s, idx)=>{
+      if(!s.url || uniq.includes(s.url)) return;
+      uniq.push(s.url);
+      const item = document.createElement('div');
+      item.className = 'item';
+      item.innerHTML = `
+        <span class="icon">🔗</span>
+        <div class="src">${s.url}</div>
+        <span class="badge">${s.origin}</span>
+        <button class="btn" data-url="${s.url}">Prévisualiser</button>`;
+      item.querySelector('button').addEventListener('click', ()=>{
+        setActiveSource(s.url);
+      });
+      srcList.appendChild(item);
+    });
+
+    // Sécurité & Gouvernance
+    const permBadge = (m.permission==='ReadWriteMailbox'?'warn':'ok');
+    govEl.innerHTML = `
+      <div class="row">
+        <b>Permission</b> : <code>${m.permission||'—'}</code>
+        <span class="pill ${permBadge}">Niveau : ${m.permInfo.lvl}</span>
+        <div class="muted">${m.permInfo.note}</div>
+      </div>
+      <div class="row check">
+        <b>Requirement set</b> : Mailbox <b>${m.minMailbox||'—'}</b> (contrôle de compatibilité affichage/plateformes).
+      </div>
+      <div class="row">
+        <b>AppDomains</b> : ${m.appDomains.length? m.appDomains.map(d=>`<span class="pill">${d}</span>`).join(' ') : '<span class="muted">Aucun (vérifie les domaines autorisés)</span>'}
+      </div>
+      <div class="row check">
+        <b>Contrôles “Marketplace” (simulation)</b>
+        <ul style="margin:6px 0 0 18px">
+          <li>URLs HTTPS pour toutes les locations : <b>${m.httpsOk?'OK':'⚠ À corriger'}</b></li>
+          <li>Icônes commandes 16/32/80 : <span id="mkIconCheck" class="badge">en cours…</span></li>
+          <li>Hosts inclut <code>Mailbox</code> pour Outlook : <b>${m.hosts.includes('Mailbox')?'OK':'⚠ Manquant'}</b></li>
+          <li>Requirement set cohérent (Mailbox) : <b>${m.minMailbox? 'OK' : '⚠ À définir'}</b></li>
+        </ul>
+      </div>
+    `;
+
+    // Icônes (top-level + commandes)
+    iconsList.innerHTML = '';
+    [...m.topIcons, ...m.resImages.map(i=>({kind:`Resource:${i.id}`, url:i.url}))].forEach(it=>{
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.innerHTML = `
+        <img data-src="${it.url}" alt="" style="width:20px;height:20px;border-radius:4px;border:1px solid #e2e6ee;object-fit:contain;background:#fff"/>
+        <div class="src" title="${it.url}">${it.url||'—'}</div>
+        <span class="badge">${it.kind}</span>
+        <span class="badge" data-role="status">check…</span>
+        <span class="badge" data-role="size"></span>`;
+      iconsList.appendChild(div);
+      probeImage(div.querySelector('img'), div.querySelector('[data-role="status"]'), div.querySelector('[data-role="size"]'));
+    });
+
+    // Faux ruban
+    renderRibbon(m);
+
+    setStep(3);
+  }
+
+  function renderRibbon(m){
+    ribbon.innerHTML = '';
+    cmdIconsList.innerHTML = '';
+    // Grouper par “group”
+    const groups = {};
+    m.commands.forEach(c=>{
+      const g = c.group||'Groupe';
+      groups[g] = groups[g] || [];
+      groups[g].push(c);
+    });
+    Object.keys(groups).forEach(gName=>{
+      const gDiv = document.createElement('div');
+      gDiv.className = 'grp';
+      gDiv.innerHTML = `<b>${gName}</b>`;
+      groups[gName].forEach(c=>{
+        const btn = document.createElement('button');
+        btn.className = 'btnRibbon';
+        const iconUrl = (m.commandIcons.find(x=>x.cmd===c.id && (x.size==='16' || x.size==='32'))||{}).url || '';
+        btn.innerHTML = `${iconUrl? `<img src="${iconUrl}" alt="">` : ''}<span>${c.label||c.id}</span>`;
+        btn.addEventListener('click', ()=>{
+          if(c.actionUrl) setActiveSource(c.actionUrl);
+        });
+        gDiv.appendChild(btn);
+
+        // Lister ses icônes
+        (m.commandIcons.filter(x=>x.cmd===c.id)).forEach(x=>{
+          const li = document.createElement('div');
+          li.className = 'item';
+          li.innerHTML = `
+            <img data-src="${x.url}" alt="" style="width:20px;height:20px;border-radius:4px;border:1px solid #e2e6ee;object-fit:contain;background:#fff"/>
+            <div class="src" title="${x.url}">${x.url||'—'}</div>
+            <span class="badge">cmd:${c.id}</span>
+            <span class="badge">size:${x.size||'?'}</span>
+            <span class="badge" data-role="status">check…</span>`;
+          cmdIconsList.appendChild(li);
+          probeImage(li.querySelector('img'), li.querySelector('[data-role="status"]'), null);
+        });
+      });
+      ribbon.appendChild(gDiv);
+    });
+    setStep(5);
+
+    // Auto‑sélection de la 1ère source disponible
+    const first = (m.sourceLocations||[]).find(s=>s.url);
+    if(first) setActiveSource(first.url);
+
+    // Contrôle Marketplace (icônes 16/32/80)
+    setTimeout(()=>{
+      const sizes = m.commandIcons.map(x=>x.size).filter(Boolean);
+      const ok = ['16','32','80'].every(s=>sizes.includes(s));
+      const el = document.getElementById('mkIconCheck');
+      if(el){ el.className='badge '+(ok?'ok':'err'); el.textContent = ok?'OK':'Manque 16/32/80'; }
+    }, 300);
+  }
+
+  function setActiveSource(url){
+    srcActive.textContent = url;
+    pane.src = url + "?admin-simulator1"; // ouverture des HTML depuis le manifeste
+  }
+
+  // Test de chargement + récupération de la taille
+  function probeImage(imgEl, statusEl, sizeEl){
+    const url = imgEl.getAttribute('data-src');
+    if(!url){ if(statusEl) statusEl.textContent='—'; return; }
+    imgEl.onload = ()=>{
+      if(statusEl){ statusEl.className='badge ok'; statusEl.textContent='OK'; }
+      if(sizeEl){ sizeEl.textContent = `${imgEl.naturalWidth}×${imgEl.naturalHeight}`; }
+    };
+    imgEl.onerror = ()=>{
+      if(statusEl){ statusEl.className='badge err'; statusEl.textContent='Erreur'; }
+      if(sizeEl){ sizeEl.textContent = ''; }
+    };
+    imgEl.src = url;
+  }
+
+  // ===== Chargement / parsing =====
+  async function processManifest(text){
+    manifestText = text;
+    const doc = new DOMParser().parseFromString(text, 'application/xml');
+    const err = doc.querySelector('parsererror');
+    if(err) throw new Error('XML invalide');
+    model = parseManifest(doc);
+    xmlPreview.textContent = text.slice(0, 4000) + (text.length>4000? "\n…(tronqué)":"");
+    setStep(2);
+    renderAnalysis(model);
+  }
+
+  async function fetchText(url){
+    const res = await fetch(url, {mode:'cors'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    return await res.text();
+  }
+
+  // ===== Événements =====
+  q('#manifestFile').addEventListener('change', async (e)=>{
+    const f = e.target.files[0];
+    if(!f) return;
+    try{ processManifest(await f.text()); }
+    catch(ex){ analysisEl.innerHTML = '<span style="color:#b00020">Erreur : '+ex.message+'</span>'; }
+  });
+
+  q('#pasteUrlBtn').addEventListener('click', async ()=>{
+    try{
+      const t = await navigator.clipboard.readText();
+      q('#manifestUrl').value = t.trim();
+    }catch{ alert('Lecture presse‑papiers refusée par le navigateur.'); }
+  });
+
+  q('#btnFetch').addEventListener('click', async ()=>{
+    const url = q('#manifestUrl').value.trim();
+    if(!url){ alert('Saisis une URL'); return; }
+    analysisEl.textContent = 'Téléchargement…';
+    try{ processManifest(await fetchText(url)); }
+    catch(ex){ analysisEl.innerHTML = '<span style="color:#b00020">Téléchargement/parse impossible : '+ex.message+'</span>'; }
+  });
+
+  q('#btnSimDeploy').addEventListener('click', ()=>{
+    const scope = document.querySelector('input[name="scope"]:checked').value;
+    const mode = document.querySelector('input[name="mode"]:checked').value;
+    const when = new Date().toLocaleString();
+    localStorage.setItem('deploySim', JSON.stringify({scope,mode,when, id: model?.meta?.Id||''}));
+    q('#deployMsg').textContent = `Déploiement simulé (${scope}, ${mode}) — ${when}`;
+    setStep(4);
+  });
+
+  // Export JSON / HTML
+  q('#btnExportJson').addEventListener('click', ()=>{
+    const payload = {manifest: model, generatedAt: new Date().toISOString()};
+    const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'addin-report.json';
+    a.click();
+  });
+
+  q('#btnExportHtml').addEventListener('click', ()=>{
+    const html = `
+<!DOCTYPE html><meta charset="utf-8">
+<title>Rapport Outlook Add-in</title>
+<style>body{font-family:Segoe UI,Arial;margin:24px} code{background:#f4f6fa;padding:2px 4px;border-radius:4px}</style>
+<h1>Rapport de validation — ${model?.meta?.DisplayName||''}</h1>
+<p><b>ID:</b> <code>${model?.meta?.Id||''}</code> — <b>Version:</b> ${model?.meta?.Version||''}</p>
+<h2>Permissions</h2><p><code>${model?.permission||''}</code> — ${model?.permInfo?.lvl||''}</p>
+<h2>Requirements</h2><p>Mailbox ≥ <b>${model?.minMailbox||''}</b></p>
+<h2>Hosts</h2><p>${(model?.hosts||[]).join(', ')}</p>
+<h2>AppDomains</h2><p>${(model?.appDomains||[]).map(d=>`<code>${d}</code>`).join(' ')||'—'}</p>
+<h2>SourceLocation</h2><ul>${(model?.sourceLocations||[]).map(s=>`<li><code>${s.origin}</code> → <a href="${s.url}" target="_blank">${s.url}</a></li>`).join('')}</ul>
+<h2>Icônes</h2><ul>${(model?.resImages||[]).map(i=>`<li>${i.id} → <a href="${i.url}" target="_blank">${i.url}</a></li>`).join('')}</ul>
+<h2>Commandes</h2><ul>${(model?.commands||[]).map(c=>`<li><b>${c.group||'Groupe'}:</b> ${c.label||c.id} → ${c.actionUrl||'—'}</li>`).join('')}</ul>
+<footer style="margin-top:24px;font-size:12px;color:#666">Généré ${new Date().toLocaleString()}</footer>`;
+    const blob = new Blob([html], {type:'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'addin-report.html';
+    a.click();
+  });
+</script>
+</body>
+</html>
