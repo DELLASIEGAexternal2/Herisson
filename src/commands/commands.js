@@ -1,6 +1,8 @@
 function openConfirmDialog(event) {
+    const url = "https://dellasiegaexternal2.github.io/Herisson/src/confirm.html";
+
     Office.context.ui.displayDialogAsync(
-        window.location.origin + "/confirm.html",
+        url,
         { height: 60, width: 50 },
         () => event.completed()
     );
