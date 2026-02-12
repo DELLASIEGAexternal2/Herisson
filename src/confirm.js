@@ -1,30 +1,30 @@
 /****************************************************
- *  MODE SIMULATEUR / NAVIGATEUR (pas Outlook)
- *  Permet de figer la fenêtre dans le simulateur M365
+ *  MODE SIMULATEUR (UNIQUEMENT admin-simulator1)
  ****************************************************/
-if (window.location.href.includes("admin-simulator")) {
-    console.warn("MODE SIMULATEUR ACTIVÉ – Office.js désactivé.");
+if (location.href.includes("admin-simulator1")) {
+    console.warn("MODE SIMULATEUR (admin-simulator1) ACTIVÉ – Office.js désactivé.");
 
     document.addEventListener("DOMContentLoaded", () => {
-        // Données factices
-        document.getElementById("sender").innerText  = "exemple@domain.fr";
-        document.getElementById("subject").innerText = "Message de démonstration";
-        document.getElementById("date").innerText    = "12/02/2026 10:45";
+        // Données factices pour la capture
+        document.getElementById("sender").innerText  = "Microsoft au nom de...";
+        document.getElementById("subject").innerText = "Vous avez des tâches en retard";
+        document.getElementById("date").innerText    = "16/01/2026 08:40";
 
-        // Boutons (sans Office)
+        // Boutons en mode simulateur
         document.getElementById("btnYes").onclick = () => alert("YES (simulateur)");
         document.getElementById("btnNo").onclick  = () => alert("NO (simulateur)");
+
         document.querySelector(".help").onclick = () =>
             window.open("https://dellasiegaexternal2.github.io/Herisson/support.html");
     });
 
-    // STOP ici → on ne charge PAS Office.js
-    throw new Error("Simulateur détecté – Office.onReady désactivé.");
+    // Empêche l'exécution du code Outlook
+    throw new Error("Simulateur admin-simulator1 détecté – Office désactivé.");
 }
 
 
 /****************************************************
- *  MODE NAVIGATEUR HORS SIMULATEUR (GitHub, Chrome)
+ *  MODE NAVIGATEUR (GitHub, Chrome, preview)
  ****************************************************/
 if (typeof Office === "undefined" || !Office.context) {
     console.warn("MODE NAVIGATEUR – Preview confirm.html");
@@ -36,6 +36,7 @@ if (typeof Office === "undefined" || !Office.context) {
 
         document.getElementById("btnYes").onclick = () => alert("YES (preview)");
         document.getElementById("btnNo").onclick  = () => alert("NO (preview)");
+
         document.querySelector(".help").onclick = () =>
             window.open("https://dellasiegaexternal2.github.io/Herisson/support.html");
     });
@@ -69,7 +70,7 @@ Office.context.ui.addHandlerAsync(
     }
 );
 
-// Actions utilisateur
+// Boutons en mode Outlook
 document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("btnYes").onclick = () => {
