@@ -14,15 +14,22 @@ Office.onReady(() => {
 Office.context.ui.addHandlerAsync(
     Office.EventType.DialogMessageReceived,
     (arg) => {
-        try {
-            const data = JSON.parse(arg.message);
-
-            document.getElementById("sender").innerText  = data.sender || "—";
-            document.getElementById("subject").innerText = data.subject || "—";
-            document.getElementById("date").innerText    = data.date || "—";
-        } catch (e) {
-            console.error("Erreur parsing données dialog :", e);
+        if (!arg || !arg.message) {
+            console.warn("DialogMessageReceived sans message !");
+            return;
         }
+
+        let data;
+        try {
+            data = JSON.parse(arg.message);
+        } catch {
+            console.error("Message JSON invalide :", arg.message);
+            return;
+        }
+
+        document.getElementById("sender").innerText  = data.sender || "—";
+        document.getElementById("subject").innerText = data.subject || "—";
+        document.getElementById("date").innerText    = data.date || "—";
     }
 );
 
@@ -51,3 +58,4 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     };
 });
+
