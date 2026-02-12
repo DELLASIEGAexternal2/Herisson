@@ -2,15 +2,16 @@
  *  MODE SIMULATEUR (UNIQUEMENT admin-simulator1)
  ****************************************************/
 if (location.href.includes("admin-simulator1")) {
-    console.warn("MODE SIMULATEUR (admin-simulator1) ACTIVÉ – Office.js désactivé.");
+    console.warn("MODE SIMULATEUR ACTIVÉ – admin-simulator1 – Office.js désactivé.");
 
     document.addEventListener("DOMContentLoaded", () => {
-        // Données factices pour la capture
+
+        // Données figées pour la capture
         document.getElementById("sender").innerText  = "Microsoft au nom de...";
         document.getElementById("subject").innerText = "Vous avez des tâches en retard";
         document.getElementById("date").innerText    = "16/01/2026 08:40";
 
-        // Boutons en mode simulateur
+        // Boutons simulateur
         document.getElementById("btnYes").onclick = () => alert("YES (simulateur)");
         document.getElementById("btnNo").onclick  = () => alert("NO (simulateur)");
 
@@ -18,13 +19,13 @@ if (location.href.includes("admin-simulator1")) {
             window.open("https://dellasiegaexternal2.github.io/Herisson/support.html");
     });
 
-    // Empêche l'exécution du code Outlook
-    throw new Error("Simulateur admin-simulator1 détecté – Office désactivé.");
+    // Stopper le mode Outlook
+    throw new Error("Simulateur admin-simulator1 – Office désactivé.");
 }
 
 
 /****************************************************
- *  MODE NAVIGATEUR (GitHub, Chrome, preview)
+ *  MODE NAVIGATEUR (GitHub Pages / Chrome)
  ****************************************************/
 if (typeof Office === "undefined" || !Office.context) {
     console.warn("MODE NAVIGATEUR – Preview confirm.html");
@@ -53,24 +54,30 @@ Office.onReady(() => {
     console.log("Dialog ready");
 });
 
-// Réception des données depuis commands.js
+// Réception des données envoyées par commands.js
 Office.context.ui.addHandlerAsync(
     Office.EventType.DialogMessageReceived,
     (arg) => {
-        if (!arg || !arg.message) return;
+        if (!arg || !arg.message) {
+            console.warn("DialogMessageReceived sans message");
+            return;
+        }
 
         try {
             const data = JSON.parse(arg.message);
+
             document.getElementById("sender").innerText  = data.sender || "—";
             document.getElementById("subject").innerText = data.subject || "—";
             document.getElementById("date").innerText    = data.date || "—";
+
         } catch (e) {
             console.error("JSON dialog invalide :", arg.message, e);
         }
     }
 );
 
-// Boutons en mode Outlook
+
+// Actions utilisateur Outlook
 document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("btnYes").onclick = () => {
