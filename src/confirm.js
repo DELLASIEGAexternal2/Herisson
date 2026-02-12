@@ -1,99 +1,87 @@
 /****************************************************
- *  MODE NAVIGATEUR (PAS DANS OUTLOOK)
- *  Empêche les erreurs "Office is undefined"
- *  et permet un aperçu local de confirm.html
+ *  MODE SIMULATEUR / NAVIGATEUR (pas Outlook)
+ *  Permet de figer la fenêtre dans le simulateur M365
  ****************************************************/
-if (typeof Office === "undefined" || !Office.context) {
-    console.warn("confirm.js chargé HORS Outlook – mode navigateur activé.");
+if (window.location.href.includes("admin-simulator")) {
+    console.warn("MODE SIMULATEUR ACTIVÉ – Office.js désactivé.");
 
     document.addEventListener("DOMContentLoaded", () => {
-        // Remplir avec des valeurs fictives
-        document.getElementById("sender").innerText  = "(hors Outlook)";
-        document.getElementById("subject").innerText = "(hors Outlook)";
-        document.getElementById("date").innerText    = new Date().toLocaleString();
+        // Données factices
+        document.getElementById("sender").innerText  = "exemple@domain.fr";
+        document.getElementById("subject").innerText = "Message de démonstration";
+        document.getElementById("date").innerText    = "12/02/2026 10:45";
 
-        // Bouton OUI
-        document.getElementById("btnYes").onclick = () => {
-            alert("YES (mode navigateur)");
-        };
-
-        // Bouton NON
-        document.getElementById("btnNo").onclick = () => {
-            alert("NO (mode navigateur)");
-        };
-
-        // Aide → ouvre support.html même hors Outlook
-        document.querySelector(".help").onclick = () => {
-            window.open(
-                "https://dellasiegaexternal2.github.io/Herisson/support.html",
-                "_blank"
-            );
-        };
+        // Boutons (sans Office)
+        document.getElementById("btnYes").onclick = () => alert("YES (simulateur)");
+        document.getElementById("btnNo").onclick  = () => alert("NO (simulateur)");
+        document.querySelector(".help").onclick = () =>
+            window.open("https://dellasiegaexternal2.github.io/Herisson/support.html");
     });
 
-    // STOP ici → ne pas continuer l'exécution Outlook
-    throw new Error("Confirm.js exécuté hors Outlook – Office context absent.");
+    // STOP ici → on ne charge PAS Office.js
+    throw new Error("Simulateur détecté – Office.onReady désactivé.");
 }
 
 
 /****************************************************
- *    MODE OUTLOOK (dialog displayDialogAsync)
+ *  MODE NAVIGATEUR HORS SIMULATEUR (GitHub, Chrome)
+ ****************************************************/
+if (typeof Office === "undefined" || !Office.context) {
+    console.warn("MODE NAVIGATEUR – Preview confirm.html");
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("sender").innerText  = "(hors Outlook)";
+        document.getElementById("subject").innerText = "(hors Outlook)";
+        document.getElementById("date").innerText    = new Date().toLocaleString();
+
+        document.getElementById("btnYes").onclick = () => alert("YES (preview)");
+        document.getElementById("btnNo").onclick  = () => alert("NO (preview)");
+        document.querySelector(".help").onclick = () =>
+            window.open("https://dellasiegaexternal2.github.io/Herisson/support.html");
+    });
+
+    throw new Error("Confirm.js exécuté hors Outlook – Preview.");
+}
+
+
+/****************************************************
+ *  MODE OUTLOOK (dialog réelle)
  ****************************************************/
 
-// ------------------------------
-// 1) Initialisation Office.js
-// ------------------------------
 Office.onReady(() => {
     console.log("Dialog ready");
 });
 
-// ------------------------------
-// 2) Réception des données envoyées par commands.js
-// ------------------------------
+// Réception des données depuis commands.js
 Office.context.ui.addHandlerAsync(
     Office.EventType.DialogMessageReceived,
     (arg) => {
+        if (!arg || !arg.message) return;
 
-        // Outlook peut envoyer un 1er event sans data → ignorer
-        if (!arg || !arg.message) {
-            console.warn("DialogMessageReceived sans message.");
-            return;
-        }
-
-        let data;
         try {
-            data = JSON.parse(arg.message);
+            const data = JSON.parse(arg.message);
+            document.getElementById("sender").innerText  = data.sender || "—";
+            document.getElementById("subject").innerText = data.subject || "—";
+            document.getElementById("date").innerText    = data.date || "—";
         } catch (e) {
-            console.error("Message JSON invalide :", arg.message, e);
-            return;
+            console.error("JSON dialog invalide :", arg.message, e);
         }
-
-        // Mise à jour UI
-        document.getElementById("sender").innerText  = data.sender || "—";
-        document.getElementById("subject").innerText = data.subject || "—";
-        document.getElementById("date").innerText    = data.date || "—";
     }
 );
 
-
-// ------------------------------
-// 3) Actions utilisateur (OUI / NON / AIDE)
-// ------------------------------
+// Actions utilisateur
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Bouton OUI
     document.getElementById("btnYes").onclick = () => {
         Office.context.ui.messageParent("YES");
         Office.context.ui.closeContainer();
     };
 
-    // Bouton NON
     document.getElementById("btnNo").onclick = () => {
         Office.context.ui.messageParent("NO");
         Office.context.ui.closeContainer();
     };
 
-    // Bouton AIDE : ouverture du support
     document.querySelector(".help").onclick = () => {
         Office.context.ui.displayDialogAsync(
             "https://dellasiegaexternal2.github.io/Herisson/support.html",
