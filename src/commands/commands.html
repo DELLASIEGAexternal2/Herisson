@@ -1,15 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    
-    <!-- Office JavaScript API -->
-    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <meta charset="utf-8" />
+  <title>Signalement</title>
 
-    <!-- TON CODE QUI CONTIENT openConfirmDialog -->
-    <script type="text/javascript" src="./commands.js"></script>
+<!-- ***** AJOUT ***** -->
+<!-- Office JavaScript API -->
+  https://appsforoffice.microsoft.com/lib/1/hosted/office.js</script>
+
+  <style>
+    body { margin:0; font-family:Segoe UI, Arial; }
+    .box {
+      display:flex; align-items:center; justify-content:center;
+      min-height:100vh;
+      background:#fff;
+    }
+    .card {
+      width:min(520px, 90vw);
+      background:#fff;
+      padding:20px; border-radius:12px;
+      box-shadow:0 16px 32px rgba(0,0,0,.2);
+    }
+    button{
+      background:#0C3C78; color:white; padding:8px 14px;
+      border:0; border-radius:8px; cursor:pointer;
+    }
+  </style>
 </head>
 
-<body></body>
+<body>
+  <div class="box">
+    <div class="card">
+      <h2>Confirmer l’envoi au CERT ?</h2>
+
+      <button onclick="confirmAction()">Confirmer</button>
+    </div>
+  </div>
+
+  <script>
+    /* ***** AJOUT ***** */
+    function confirmAction(){
+      Office.context.ui.messageParent(JSON.stringify({ok:true}));
+    }
+  </script>
+</body>
 </html>
