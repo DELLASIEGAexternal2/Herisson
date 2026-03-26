@@ -7,6 +7,98 @@ body {
     font-size: 13px;
 }
 
+
+/* Arrière-plan modal */
+.modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.20);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    overflow: auto;
+}
+
+/* Fenêtre centrale */
+.modal-container {
+    background: #fff;
+    width: 85vw;
+    max-width: 1100px;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.25);
+    padding: 20px 30px;
+}
+
+/* Ton header existant */
+.header {
+    font-size: 20px;
+    font-weight: 600;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Table */
+.mail-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+.mail-table th {
+    text-align: left;
+    padding: 10px;
+    background: #f2f2f2;
+}
+.mail-table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Footer boutons */
+.footer {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+    text-align: right;
+}
+
+#btnYes {
+    background: #0C3C78;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+#btnNo {
+    background: #ccc;
+    color: #333;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.help {
+    margin-top: 15px;
+    color: #0C3C78;
+    cursor: pointer;
+    text-align: right;
+    font-weight: 600;
+}
+
+
+
+
+
+
 /* ★ HEADER (même style que les blocs de DroitDéco) ★ */
 .header {
     border-radius: 12px;
