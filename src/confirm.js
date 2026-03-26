@@ -16,7 +16,7 @@ if (location.href.includes("admin-simulator1")) {
         document.getElementById("btnNo").onclick  = () => alert("NO (simulateur)");
 
         document.querySelector(".help").onclick = () =>
-            window.open("https://dellasiegaexternal2.github.io/Herisson/support.html");
+            window.open("https://dellasiegaexternal2.github.io/Herisson/src/cfrm.html");
     });
 
     // Stopper le mode Outlook
