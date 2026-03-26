@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Hérisson – Confirmation</title>
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        font-family: Segoe UI, Arial, sans-serif;
+        background: #f5f6f7;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* ===== MODAL CENTRAL ===== */
+    .modal-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 85%;
+        max-width: 1050px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 10px 40px rgba(0,0,0,.25);
+        overflow: hidden;
+    }
+
+    /* HEADER */
+    .modal-header {
+        padding: 18px 24px;
+        border-bottom: 1px solid #ddd;
+        font-size: 20px;
+        font-weight: 600;
+        background: #fff;
+    }
+
+    /* TOP ACTIONS (OK / Cancel) */
+    .modal-actions {
+        padding: 14px 24px;
+        border-bottom: 1px solid #eee;
+    }
+    .modal-actions a {
+        text-decoration: none;
+        font-weight: 600;
+        margin-right: 20px;
+        cursor: pointer;
+    }
+    .ok { color: #0072c6; }
+    .cancel { color: #9a0000; }
+
+    /* SECTION TITLE */
+    .section-title {
+        padding: 20px 24px 10px;
+        font-size: 16px;
+        font-weight: 600;
+        border-bottom: 1px solid #eee;
+    }
+
+    /* CONTENT */
+    .modal-content {
+        padding: 20px 24px;
+        font-size: 14px;
+    }
+
+    .row {
+        display: flex;
+        margin-bottom: 12px;
+    }
+    .label {
+        width: 160px;
+        color: #444;
+        font-weight: 600;
+    }
+    .value {
+        flex: 1;
+        color: #000;
+    }
+
+    /* FOOTER BUTTONS */
+    .modal-footer {
+        padding: 18px 24px;
+        border-top: 1px solid #eee;
+        text-align: right;
+    }
+    .btn {
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: 0;
+        cursor: pointer;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+    .btn-secondary {
+        background: #ddd;
+        color: #333;
+    }
+    .btn-primary {
+        background: #0C3C78;
+        color: white;
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="modal-container">
+
+    <div class="modal-header">Envoi du message au CERT – Hérisson</div>
+
+    <div class="modal-actions">
+        <a class="ok" id="ok">✔ OK</a>
+        <a class="cancel" id="cancel">✘ Annuler</a>
+    </div>
+
+    <div class="section-title">Détails du message</div>
+
+    <div class="modal-content">
+        <div class="row"><div class="label">Expéditeur :</div><div class="value" id="sender">—</div></div>
+        <div class="row"><div class="label">Objet :</div><div class="value" id="subject">—</div></div>
+        <div class="row"><div class="label">Date :</div><div class="value" id="date">—</div></div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-secondary" id="btnNo">Annuler</button>
+        <button class="btn btn-primary" id="btnYes">Envoyer au CERT</button>
+    </div>
+
+</div>
+
+<script>
+Office.onReady(()=>{});
+
+/* === Mise à jour des champs lors de l’ouverture === */
+Office.context.mailbox.item.body.getAsync("text", (result)=>{
+    // placeholder – tu recevras les valeurs via commands.js
+});
+
+/* === Boutons === */
+document.getElementById("ok").onclick =
+document.getElementById("btnYes").onclick = () => {
+    Office.context.ui.messageParent(JSON.stringify({ confirm: true }));
+};
+
+document.getElementById("cancel").onclick =
+document.getElementById("btnNo").onclick = () => {
+    Office.context.ui.messageParent(JSON.stringify({ confirm: false }));
+};
+</script>
+
+</body>
+</html>
