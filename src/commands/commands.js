@@ -1,72 +1,64 @@
 /* global Office */
+
 Office.onReady(() => {});
 
 /**
- * Ouvre la popup Hérisson en GRAND MODAL Outlook.
- * La popup utilisée = confirm.html (inchangée).
+ * Ouvre la popup Hérisson avec les infos du mail
  */
 function openConfirmDialog(event) {
 
-    const url = "https://dellasiegaexternal2.github.io/Herisson/src/cfrm.html";
+    const url = "https://dellasiegaexternal2.github.io/Herisson/src/confirm.html";
 
-    // 1) Récupération du mail en cours
     const item = Office.context.mailbox.item;
 
     const mailData = {
-        sender:
-            item.from?.displayName ||
-            item.from?.emailAddress ||
-            "(expéditeur inconnu)",
-
+        sender: item.from?.displayName || item.from?.emailAddress || "(expéditeur inconnu)",
         subject: item.subject || "(sans sujet)",
-
-        date:
-            item.dateTimeCreated
-                ? new Date(item.dateTimeCreated).toLocaleString()
-                : "(date inconnue)"
+        date: item.dateTimeCreated
+            ? new Date(item.dateTimeCreated).toLocaleString()
+            : "(date inconnue)"
     };
 
-    // 2) Ouvrir la popup modale (grande fenêtre)
     Office.context.ui.displayDialogAsync(
         url,
         {
-            height: 70,       // Grande fenêtre
-            width: 60,        // Large
-            requireHTTPS: true,
-            displayInIframe: true
+            height: 70,
+            width: 60
         },
-        (asyncResult) => {
+        function (asyncResult) {
 
             if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
 
                 const dialog = asyncResult.value;
 
-                // 3) Envoyer les données du mail vers confirm.html
-                //    (ton HTML attend: sender, subject, date)
+                // Envoi des données vers la popup
                 setTimeout(() => {
                     dialog.messageChild(JSON.stringify({
                         type: "init",
                         data: mailData
                     }));
-                }, 400); // petit délai Outlook obligatoire
+                }, 300);
 
-                // 4) Écouter la réponse YES / NO depuis confirm.js
+                // Réponse utilisateur
                 dialog.addEventHandler(
                     Office.EventType.DialogMessageReceived,
-                    (arg) => {
+                    function (arg) {
 
                         try {
                             const msg = JSON.parse(arg.message);
 
                             if (msg.confirm === true) {
-                                console.log("Utilisateur a confirmé l’envoi Hérisson.");
-                                // ICI ON ENVOIE AU CERT (Graph ou SMTP)
-                                // → on fera cette partie étape suivante
+
+                                console.log("✔ Envoi confirmé");
+
+                                // FUTUR : envoyer mail CERT ici
+
                             } else {
-                                console.log("Utilisateur a annulé l’envoi.");
+                                console.log("❌ Envoi annulé");
                             }
+
                         } catch (e) {
-                            console.error("Message popup invalide :", arg.message);
+                            console.error("Erreur parsing message popup");
                         }
 
                         dialog.close();
@@ -74,13 +66,9 @@ function openConfirmDialog(event) {
                 );
             }
 
-            // Outlook exige que la commande soit libérée
             event.completed();
         }
     );
 }
 
-/* --- Exposer la fonction --- */
-if (typeof window !== "undefined") {
-    window.openConfirmDialog = openConfirmDialog;
-}
+window.openConfirmDialog = openConfirmDialog;
