@@ -3,32 +3,11 @@
 <head>
 <meta charset="utf-8"/>
 
+<!-- Office JS -->
 <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
 
-<script>
-Office.onReady(() => {
-    console.log("Commands loaded");
-});
-
-/**
- * Fonction appelée depuis le manifest
- */
-function openConfirmDialog(event){
-
-    const url = "https://dellasiegaexternal2.github.io/Herisson/src/confirm.html";
-
-    Office.context.ui.displayDialogAsync(url,{
-        height:70,
-        width:60
-    });
-
-    event.completed();
-}
-
-/* rendre accessible à Outlook */
-window.openConfirmDialog = openConfirmDialog;
-
-</script>
+<!-- TON SCRIPT -->
+<script src="commands.js"></script>
 
 </head>
 <body>
