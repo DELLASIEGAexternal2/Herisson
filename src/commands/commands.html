@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8"/>
 
-<!-- Office JS obligatoire -->
 <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
 
 <script>
@@ -12,7 +11,7 @@ Office.onReady(() => {
 });
 
 /**
- * Fonction appelée par le manifest
+ * Fonction appelée depuis le manifest
  */
 function openConfirmDialog(event){
 
@@ -26,7 +25,7 @@ function openConfirmDialog(event){
     event.completed();
 }
 
-// IMPORTANT → rendre visible pour Outlook
+/* rendre accessible à Outlook */
 window.openConfirmDialog = openConfirmDialog;
 
 </script>
