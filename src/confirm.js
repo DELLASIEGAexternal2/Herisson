@@ -54,7 +54,7 @@ function initButtons() {
                 },
                 body: JSON.stringify({
                     message: {
-                        subject: "🚨 Signalement Hérisson",
+                        subject: " Signalement Hérisson",
                         body: {
                             contentType: "HTML",
                             content: "Mail suspect en pièce jointe"
