@@ -63,9 +63,12 @@ function openConfirmDialog(event) {
                     function (arg) {
 
                         try {
-                            const msg = JSON.parse(arg.message);
-
-                            if (msg.confirm === true) {
+                          if (arg.message === "YES") {
+    console.log("✔ Confirmation utilisateur → déjà traité dans confirm.js");
+}
+else if (arg.message === "NO") {
+    console.log("❌ Annulé utilisateur");
+} {
 
                                 console.log("✔ Confirmation utilisateur");
 
