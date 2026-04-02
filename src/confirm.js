@@ -23,22 +23,39 @@ document.getElementById("btnYes").onclick = async () => {
 
     try {
 
+        // 🔐 Token utilisateur
         const token = await OfficeRuntime.auth.getAccessToken();
 
-        console.log("TOKEN:", token);
+        const itemId = Office.context.mailbox.item.itemId;
 
+        // 🔥 1. récupérer le mail en MIME
+        const mimeResponse = await fetch(
+            `https://graph.microsoft.com/v1.0/me/messages/${itemId}/$value`,
+            {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+        );
+
+        const mimeContent = await mimeResponse.text();
+
+        // 🔥 2. encoder en base64
+        const base64 = btoa(unescape(encodeURIComponent(mimeContent)));
+
+        // 🔥 3. envoyer au CERT
         await fetch("https://graph.microsoft.com/v1.0/me/sendMail", {
             method: "POST",
             headers: {
-                "Authorization": "Bearer " + token,
+                Authorization: "Bearer " + token,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
                 message: {
-                    subject: "Signalement Hérisson",
+                    subject: "🚨 Signalement Hérisson",
                     body: {
                         contentType: "HTML",
-                        content: "<b>Mail suspect signalé</b>"
+                        content: "Mail suspect en pièce jointe"
                     },
                     toRecipients: [
                         {
@@ -46,16 +63,26 @@ document.getElementById("btnYes").onclick = async () => {
                                 address: "Primo.DELLASIEGA.external2@test-banque-france.fr"
                             }
                         }
+                    ],
+                    attachments: [
+                        {
+                            "@odata.type": "#microsoft.graph.fileAttachment",
+                            name: "mail.eml",
+                            contentType: "message/rfc822",
+                            contentBytes: base64
+                        }
                     ]
                 }
             })
         });
 
+        console.log("✔ Mail envoyé au CERT");
+
         Office.context.ui.messageParent("YES");
         Office.context.ui.closeContainer();
 
     } catch (err) {
-        console.error("Erreur Graph:", err);
+        console.error("Erreur:", err);
     }
 };
 
