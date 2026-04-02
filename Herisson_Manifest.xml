@@ -30,6 +30,19 @@ xsi:type="MailApp">
     </Sets>
   </Requirements>
 
+
+<FormSettings>
+  <Form xsi:type="ItemRead">
+    <DesktopSettings>
+      <SourceLocation DefaultValue="https://dellasiegaexternal2.github.io/Herisson/src/confirm.html"/>
+      <RequestedHeight>250</RequestedHeight>
+    </DesktopSettings>
+  </Form>
+</FormSettings>
+
+
+  
+
   <Permissions>ReadWriteItem</Permissions>
 
   <Rule xsi:type="RuleCollection" Mode="Or">
