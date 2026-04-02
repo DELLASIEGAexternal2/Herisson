@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+<style>
+body {
+  margin:0;
+  font-family:Segoe UI, Arial;
+  background:#f5f6fa;
+}
+
+.box {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+}
+
+.card {
+  width:min(520px, 90vw);
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 16px 32px rgba(0,0,0,.2);
+  text-align:center;
+}
+
+button {
+  background:#0C3C78;
+  color:white;
+  padding:10px 16px;
+  border:0;
+  border-radius:8px;
+  cursor:pointer;
+  margin-top:15px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+  <div class="card">
+
+    <h2>Confirmer l’envoi au CERT ?</h2>
+
+    <button onclick="confirmAction()">Confirmer</button>
+
+  </div>
+</div>
+
+<script>
+
+Office.onReady(() => {
+    console.log("Popup ready");
+});
+
+/**
+ * Envoie la confirmation à Outlook
+ */
+function confirmAction(){
+    Office.context.ui.messageParent(JSON.stringify({confirm:true}));
+}
+
+</script>
+
+</body>
+</html>
