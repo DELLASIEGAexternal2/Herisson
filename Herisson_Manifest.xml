@@ -91,7 +91,7 @@
       </bt:Images>
       <bt:Urls>
         <bt:Url id="Commands.Url" DefaultValue="https://dellasiegaexternal2.github.io/Herisson/src/commands/commands.html"/>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://dellasiegaexternal2.github.io/Herisson/src/cfrm.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://dellasiegaexternal2.github.io/Herisson/src/confirm.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="Herisson"/>
