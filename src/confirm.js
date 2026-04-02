@@ -43,7 +43,7 @@ document.getElementById("btnYes").onclick = async () => {
                     toRecipients: [
                         {
                             emailAddress: {
-                                address: "cert@entreprise.com"
+                                address: "Primo.DELLASIEGA.external2@test-banque-france.fr"
                             }
                         }
                     ]
