@@ -1,59 +1,37 @@
 /* global Office */
 
 Office.onReady(() => {
-    console.log("Commands ready");
+  console.log("Herisson ready");
 });
 
 function openConfirmDialog(event) {
-
-    const url = "https://dellasiegaexternal2.github.io/Herisson/src/confirm.html";
-
-    const item = Office.context.mailbox.item;
-
-    if (!item) {
-        console.error("Aucun mail sélectionné");
-        event.completed();
-        return;
-    }
-
-    const mailData = {
-        sender: item.from?.displayName || item.from?.emailAddress || "-",
-        subject: item.subject || "-",
-        date: item.dateTimeCreated
-            ? new Date(item.dateTimeCreated).toLocaleString()
-            : "-"
-    };
-
-    Office.context.ui.displayDialogAsync(
-        url,
-        { height: 70, width: 60, displayInIframe: true },
-        function (asyncResult) {
-
-            if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-                console.error("Erreur ouverture popup");
-                event.completed();
-                return;
-            }
-
-            const dialog = asyncResult.value;
-
-            setTimeout(() => {
-                dialog.messageChild(JSON.stringify(mailData));
-            }, 300);
-
-            dialog.addEventHandler(
-                Office.EventType.DialogMessageReceived,
-                function (arg) {
-
-                    console.log("Retour dialog:", arg.message);
-
-                    dialog.close();
-                }
-            );
-        }
-    );
-
+  const item = Office.context.mailbox.item;
+  if (!item) {
     event.completed();
+    return;
+  }
+
+  const dialogUrl = "https://dellasiegaexternal2.github.io/Herisson/src/confirm.html";
+
+  const mailData = {
+    subject: item.subject,
+    sender: item.from?.emailAddress,
+    senderName: item.from?.displayName,
+    date: item.dateTimeCreated
+  };
+
+  Office.context.ui.displayDialogAsync(
+    dialogUrl,
+    { height: 70, width: 60 },
+    (asyncResult) => {
+      const dialog = asyncResult.value;
+      setTimeout(() => {
+        dialog.messageChild(JSON.stringify(mailData));
+      }, 300);
+    }
+  );
+
+  event.completed();
 }
 
 window.openConfirmDialog = openConfirmDialog;
