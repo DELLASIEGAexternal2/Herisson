@@ -17,13 +17,12 @@ function handleMailData(arg) {
 }
 
 async function displayUser() {
-  const token = await OfficeRuntime.auth.getAccessToken({ allowSignInPrompt: true });
+ /* const token = await OfficeRuntime.auth.getAccessToken({ allowSignInPrompt: true });
   const me = await fetch("https://graph.microsoft.com/v1.0/me", {
     headers: { Authorization: `Bearer ${token}` }
   }).then(r => r.json());
 
-  document.getElementById("userInfo").innerText =
-    `${me.displayName} – ${me.mail || me.userPrincipalName}`;
+  document.getElementById("userInfo").innerText =`${me.displayName} – ${me.mail || me.userPrincipalName}`;*/
 }
 
 document.getElementById("btnYes").onclick = async () => {
