@@ -2,25 +2,62 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Signalement Hérisson</title>
+  <title>Confirmation – Hérisson</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Office.js (obligatoire dans le dialog Outlook) -->
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <link rel="stylesheet" href="./confirm.css" />
 </head>
-
 <body>
-  <h2>Confirmation du signalement</h2>
+  <div class="container">
+    <header class="header">
+      <img src="../assets/icon-32.png" alt="Hérisson" />
+      <h1>Signalement d’un message suspect</h1>
+    </header>
 
-  <h3>👤 Utilisateur connecté</h3>
-  <p id="userInfo">Chargement...</p>
+    <section class="mail-info">
+      <h2>Informations du message</h2>
+      <table>
+        <tbody>
+          <tr>
+            <th>Expéditeur</th><td id="sender">—</td>
+          </tr>
+          <tr>
+            <th>Objet</th><td id="subject">—</td>
+          </tr>
+          <tr>
+            <th>Reçu</th><td id="received">—</td>
+          </tr>
+          <tr>
+            <th>Message-Id</th><td id="imid">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
-  <h3>📧 Mail suspect</h3>
-  <p><b>Expéditeur:</b> <span id="sender"></span></p>
-  <p><b>Objet:</b> <span id="subject"></span></p>
-  <p><b>Date:</b> <span id="date"></span></p>
+    <section class="rules">
+      <h2>Règles de signalement</h2>
+      <ul>
+        <li>Ne cliquez jamais sur les liens suspects.</li>
+        <li>Ne téléchargez pas de pièces jointes inconnues.</li>
+        <li>Ajoutez un commentaire si un comportement anormal a été observé.</li>
+      </ul>
+    </section>
 
-  <button id="btnYes">✅ Signaler</button>
-  <button id="btnNo">❌ Annuler</button>
+    <section class="comment">
+      <label for="comment">Commentaire (optionnel)</label>
+      <textarea id="comment" rows="4" placeholder="Ajoutez un contexte utile pour le CERT…"></textarea>
+    </section>
 
-  <script src="confirm.js"></script>
+    <section class="actions">
+      <button id="btnNo" class="btn secondary">Ne pas signaler</button>
+      <button id="btnYes" class="btn primary">Signaler</button>
+      <button id="btnHelp" class="btn link">Besoin d’aide ?</button>
+    </section>
+  </div>
+
+  <script src="./confirm.js"></script>
 </body>
 </html>
