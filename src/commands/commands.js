@@ -17,8 +17,8 @@ function openConfirmDialog(event) {
     }
 
     const mailData = {
-        sender: item.from?.displayName || item.from?.emailAddress,
-        subject: item.subject,
+        sender: item.from?.displayName || item.from?.emailAddress || "-",
+        subject: item.subject || "-",
         date: item.dateTimeCreated
             ? new Date(item.dateTimeCreated).toLocaleString()
             : "-"
@@ -30,7 +30,7 @@ function openConfirmDialog(event) {
         function (asyncResult) {
 
             if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-                console.error("Erreur popup");
+                console.error("Erreur ouverture popup");
                 event.completed();
                 return;
             }
@@ -45,15 +45,7 @@ function openConfirmDialog(event) {
                 Office.EventType.DialogMessageReceived,
                 function (arg) {
 
-                    if (arg.message === "YES") {
-                        console.log("✔ Mail envoyé");
-                    }
-                    else if (arg.message === "NO") {
-                        console.log("❌ Annulé");
-                    }
-                    else if (arg.message === "ERROR") {
-                        console.error("❌ Erreur envoi");
-                    }
+                    console.log("Retour dialog:", arg.message);
 
                     dialog.close();
                 }
