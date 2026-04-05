@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Confirmation – Hérisson</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Office.js (obligatoire dans le dialog Outlook) -->
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+  <link rel="stylesheet" href="./confirm.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <img src="../assets/icon-32.png" alt="Hérisson" />
+      <h1>Signalement d’un message suspect</h1>
+    </header>
+
+    <section class="mail-info">
+      <h2>Informations du message</h2>
+      <table>
+        <tbody>
+          <tr>
+            <th>Expéditeur</th><td id="sender">—</td>
+          </tr>
+          <tr>
+            <th>Objet</th><td id="subject">—</td>
+          </tr>
+          <tr>
+            <th>Reçu</th><td id="received">—</td>
+          </tr>
+          <tr>
+            <th>Message-Id</th><td id="imid">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="rules">
+      <h2>Règles de signalement</h2>
+      <ul>
+        <li>Ne cliquez jamais sur les liens suspects.</li>
+        <li>Ne téléchargez pas de pièces jointes inconnues.</li>
+        <li>Ajoutez un commentaire si un comportement anormal a été observé.</li>
+      </ul>
+    </section>
+
+    <section class="comment">
+      <label for="comment">Commentaire (optionnel)</label>
+      <textarea id="comment" rows="4" placeholder="Ajoutez un contexte utile pour le CERT…"></textarea>
+    </section>
+
+    <section class="actions">
+      <button id="btnNo" class="btn secondary">Ne pas signaler</button>
+      <button id="btnYes" class="btn primary">Signaler</button>
+      <button id="btnHelp" class="btn link">Besoin d’aide ?</button>
+    </section>
+  </div>
+
+  <script src="./confirm.js"></script>
+</body>
+</html>
