@@ -7,18 +7,26 @@ Office.onReady(() => {
     handleMailData
   );
 
-  document.addEventListener("DOMContentLoaded", () => {
-
-    console.log("DOM READY");
-
-    document.getElementById("btnYes").onclick = sendMail;
-    document.getElementById("btnNo").onclick = () => {
-      Office.context.ui.closeContainer();
-    };
-
-  });
-
 });
+
+// 🔥 attendre que le DOM soit prêt AVANT de binder les boutons
+window.onload = () => {
+
+  console.log("WINDOW READY");
+
+  const btnYes = document.getElementById("btnYes");
+  const btnNo = document.getElementById("btnNo");
+
+  if (!btnYes || !btnNo) {
+    console.error("Boutons non trouvés");
+    return;
+  }
+
+  btnYes.addEventListener("click", sendMail);
+  btnNo.addEventListener("click", () => {
+    Office.context.ui.closeContainer();
+  });
+};
 
 let mailData = null;
 
@@ -51,22 +59,27 @@ const msalConfig = {
 
 const msalInstance = new msal.PublicClientApplication(msalConfig);
 
+// 🔥 TOKEN GRAPH (fix popup)
 async function getGraphToken() {
 
-  const accounts = msalInstance.getAllAccounts();
-
-  if (accounts.length === 0) {
-    await msalInstance.loginPopup({
+  try {
+    const response = await msalInstance.acquireTokenSilent({
       scopes: ["Mail.Read", "Mail.Send"]
     });
+
+    return response.accessToken;
+
+  } catch (e) {
+
+    console.log("Silent KO → popup");
+
+    const loginResponse = await msalInstance.loginPopup({
+      scopes: ["Mail.Read", "Mail.Send"],
+      prompt: "select_account"
+    });
+
+    return loginResponse.accessToken;
   }
-
-  const response = await msalInstance.acquireTokenSilent({
-    scopes: ["Mail.Read", "Mail.Send"],
-    account: msalInstance.getAllAccounts()[0]
-  });
-
-  return response.accessToken;
 }
 
 // 🔥 ENVOI
@@ -74,12 +87,17 @@ async function sendMail() {
 
   try {
 
-    console.log("START SEND");
+    console.log("CLICK OK");
+
+    if (!mailData) {
+      throw new Error("Pas de données mail");
+    }
 
     const token = await getGraphToken();
 
     console.log("TOKEN OK");
 
+    // GET MAIL
     const mailResponse = await fetch(
       `https://graph.microsoft.com/v1.0/me/messages/${mailData.itemId}/$value`,
       {
@@ -100,6 +118,7 @@ async function sendMail() {
         .reduce((data, byte) => data + String.fromCharCode(byte), '')
     );
 
+    // SEND MAIL
     const sendResponse = await fetch(
       "https://graph.microsoft.com/v1.0/me/sendMail",
       {
@@ -144,6 +163,8 @@ async function sendMail() {
     }
 
     console.log("MAIL SENT ✅");
+
+    alert("Signalement envoyé ✔");
 
     Office.context.ui.closeContainer();
 
