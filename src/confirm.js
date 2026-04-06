@@ -122,7 +122,7 @@ async function sendMail() {
             toRecipients: [
               {
                 emailAddress: {
-                  address: "Primo.DELLASIEGA.external2@test-banque-france.fr"
+                  address: "primo.dellasiega@icloud.com"
                 }
               }
             ],
