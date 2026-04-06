@@ -121,7 +121,17 @@ xsi:type="MailApp">
 
     </Resources>
  
-
+  <!-- APP AZURE ID AJOUT ICI (CRITIQUE) -->
+  <WebApplicationInfo>
+    <Id>e92a8324-40d8-4ce5-876d-99df6b07acf9</Id>
+    <Resource>https://graph.microsoft.com</Resource>
+    <Scopes>
+      <Scope>Mail.Read</Scope>
+      <Scope>Mail.Send</Scope>
+      <Scope>User.Read</Scope>
+    </Scopes>
+  </WebApplicationInfo>
+    
   </VersionOverrides>
 
 </OfficeApp>
