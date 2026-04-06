@@ -18,12 +18,18 @@ function openConfirmDialog(event) {
 
     const dialogUrl = "https://dellasiegaexternal2.github.io/Herisson/src/confirm.html";
 
-    const mailData = {
-      subject: item.subject,
-      sender: item.from?.emailAddress,
-      senderName: item.from?.displayName,
-      date: item.dateTimeCreated
-    };
+const mailData = {
+  subject: item.subject,
+  sender: item.from?.emailAddress,
+  senderName: item.from?.displayName,
+  date: item.dateTimeCreated,
+
+  // 🔥 CRITIQUE
+  itemId: Office.context.mailbox.convertToRestId(
+    item.itemId,
+    Office.MailboxEnums.RestVersion.v2_0
+  )
+};
 
     Office.context.ui.displayDialogAsync(
       dialogUrl,
