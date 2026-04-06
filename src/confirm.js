@@ -64,7 +64,7 @@ document.getElementById("btnYes").onclick = async () => {
           toRecipients: [
             {
               emailAddress: {
-                address: "Primo.DELLASIEGA.external2@test-banque-france.fr"
+                address: "Primo.DELLASIEGA@icloud.com"
               }
             }
           ],
