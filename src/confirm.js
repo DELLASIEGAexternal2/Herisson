@@ -1,7 +1,5 @@
 Office.onReady(() => {
 
-  console.log("Office READY");
-
   Office.context.ui.addHandlerAsync(
     Office.EventType.DialogParentMessageReceived,
     handleMailData
@@ -9,117 +7,65 @@ Office.onReady(() => {
 
 });
 
-// 🔥 attendre que le DOM soit prêt AVANT de binder les boutons
 window.onload = () => {
-
-  console.log("WINDOW READY");
 
   const btnYes = document.getElementById("btnYes");
   const btnNo = document.getElementById("btnNo");
 
-  if (!btnYes || !btnNo) {
-    console.error("Boutons non trouvés");
-    return;
-  }
-
-  btnYes.addEventListener("click", sendMail);
-  btnNo.addEventListener("click", () => {
-    Office.context.ui.closeContainer();
-  });
+  btnYes.onclick = sendMail;
+  btnNo.onclick = () => Office.context.ui.closeContainer();
 };
 
 let mailData = null;
 
 function handleMailData(arg) {
 
-  try {
+  mailData = JSON.parse(arg.message);
 
-    mailData = JSON.parse(arg.message);
-
-    console.log("DATA:", mailData);
-
-    document.getElementById("sender").innerText = mailData.sender || "-";
-    document.getElementById("subject").innerText = mailData.subject || "-";
-    document.getElementById("date").innerText =
-      new Date(mailData.date).toLocaleString() || "-";
-
-  } catch (e) {
-    console.error("DATA ERROR:", e);
-  }
+  document.getElementById("sender").innerText = mailData.sender || "-";
+  document.getElementById("subject").innerText = mailData.subject || "-";
+  document.getElementById("date").innerText =
+    new Date(mailData.date).toLocaleString() || "-";
 }
 
-// 🔐 MSAL CONFIG
-const msalConfig = {
+
+// 🔐 MSAL
+const msalInstance = new msal.PublicClientApplication({
   auth: {
     clientId: "e92a8324-40d8-4ce5-876d-99df6b07acf9",
     authority: "https://login.microsoftonline.com/common",
     redirectUri: window.location.origin
   }
-};
+});
 
-const msalInstance = new msal.PublicClientApplication(msalConfig);
-
-// 🔥 TOKEN GRAPH (fix popup)
-async function getGraphToken() {
+async function getToken() {
 
   try {
-    const response = await msalInstance.acquireTokenSilent({
+    const r = await msalInstance.acquireTokenSilent({
       scopes: ["Mail.Read", "Mail.Send"]
     });
+    return r.accessToken;
 
-    return response.accessToken;
+  } catch {
 
-  } catch (e) {
-
-    console.log("Silent KO → popup");
-
-    const loginResponse = await msalInstance.loginPopup({
+    const r = await msalInstance.loginPopup({
       scopes: ["Mail.Read", "Mail.Send"],
       prompt: "select_account"
     });
 
-    return loginResponse.accessToken;
+    return r.accessToken;
   }
 }
 
-// 🔥 ENVOI
+
+// 🔥 ENVOI SIMPLE (SANS PIECE JOINTE POUR GARANTIR ENVOI)
 async function sendMail() {
 
   try {
 
-    console.log("CLICK OK");
+    const token = await getToken();
 
-    if (!mailData) {
-      throw new Error("Pas de données mail");
-    }
-
-    const token = await getGraphToken();
-
-    console.log("TOKEN OK");
-
-    // GET MAIL
-    const mailResponse = await fetch(
-      `https://graph.microsoft.com/v1.0/me/messages/${mailData.itemId}/$value`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    );
-
-    if (!mailResponse.ok) {
-      throw new Error(await mailResponse.text());
-    }
-
-    const eml = await mailResponse.text();
-
-    const base64 = btoa(
-      new Uint8Array([...eml].map(c => c.charCodeAt(0)))
-        .reduce((data, byte) => data + String.fromCharCode(byte), '')
-    );
-
-    // SEND MAIL
-    const sendResponse = await fetch(
+    const response = await fetch(
       "https://graph.microsoft.com/v1.0/me/sendMail",
       {
         method: "POST",
@@ -129,13 +75,12 @@ async function sendMail() {
         },
         body: JSON.stringify({
           message: {
-            subject: "🚨 Signalement Hérisson",
+            subject: "🚨 TEST SIGNAL HERISSON",
             body: {
-              contentType: "HTML",
+              contentType: "Text",
               content: `
-                Mail suspect<br>
-                Expéditeur: ${mailData.sender}<br>
-                Sujet: ${mailData.subject}
+Expéditeur: ${mailData.sender}
+Sujet: ${mailData.subject}
               `
             },
             toRecipients: [
@@ -144,33 +89,24 @@ async function sendMail() {
                   address: "PrimoSylvestreDELLASIEGA-NKOUME@dscoie091.onmicrosoft.com"
                 }
               }
-            ],
-            attachments: [
-              {
-                "@odata.type": "#microsoft.graph.fileAttachment",
-                name: "mail.eml",
-                contentType: "message/rfc822",
-                contentBytes: base64
-              }
             ]
           }
         })
       }
     );
 
-    if (!sendResponse.ok) {
-      throw new Error(await sendResponse.text());
+    if (!response.ok) {
+      const err = await response.text();
+      alert("Erreur envoi: " + err);
+      return;
     }
 
-    console.log("MAIL SENT ✅");
-
-    alert("Signalement envoyé ✔");
+    alert("MAIL ENVOYÉ ✔");
 
     Office.context.ui.closeContainer();
 
-  } catch (err) {
+  } catch (e) {
 
-    console.error("ERROR:", err);
-    alert("Erreur ❌ " + err.message);
+    alert("Erreur: " + e.message);
   }
 }
