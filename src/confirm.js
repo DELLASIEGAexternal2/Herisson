@@ -77,5 +77,6 @@ document.getElementById("btnYes").onclick = async () => {
 };
 
 document.getElementById("btnNo").onclick = () => {
-  Office.context.ui.closeContainer();
+  //Office.context.ui.closeContainer();
+  alert("ok");
 };
