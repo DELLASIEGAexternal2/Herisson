@@ -5,11 +5,13 @@ Office.onReady(() => {
 });
 
 function openConfirmDialog(event) {
+
   try {
+
     const item = Office.context.mailbox.item;
 
-    if (!item) {
-      console.error("Pas de mail");
+    if (!item || !item.subject) {
+      console.error("Mail non disponible");
       event.completed();
       return;
     }
@@ -17,16 +19,21 @@ function openConfirmDialog(event) {
     const dialogUrl = "https://dellasiegaexternal2.github.io/Herisson/src/confirm.html";
 
     const mailData = {
-      subject: item.subject || "N/A",
-      sender: item.from?.emailAddress || "N/A",
-      senderName: item.from?.displayName || "N/A",
-      date: item.dateTimeCreated || new Date()
+      subject: item.subject,
+      sender: item.from?.emailAddress,
+      senderName: item.from?.displayName,
+      date: item.dateTimeCreated
     };
 
     Office.context.ui.displayDialogAsync(
       dialogUrl,
-      { height: 70, width: 60 },
+      {
+        height: 70,
+        width: 60,
+        displayInIframe: true
+      },
       (asyncResult) => {
+
         if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
           console.error(asyncResult.error);
           return;
@@ -36,15 +43,16 @@ function openConfirmDialog(event) {
 
         setTimeout(() => {
           dialog.messageChild(JSON.stringify(mailData));
-        }, 500);
+        }, 800);
       }
     );
 
   } catch (e) {
-    console.error("Dialog error:", e);
+    console.error(e);
   }
 
   event.completed();
 }
 
-window.openConfirmDialog = openConfirmDialog;
+// 🔥 CRITIQUE
+Office.actions.associate("openConfirmDialog", openConfirmDialog);
