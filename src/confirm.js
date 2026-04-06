@@ -1,82 +1,96 @@
-Office.onReady(async () => {
+Office.onReady(() => {
   Office.context.ui.addHandlerAsync(
     Office.EventType.DialogParentMessageReceived,
     handleMailData
   );
-
-  displayUser();
 });
 
 let mailData = null;
 
 function handleMailData(arg) {
   mailData = JSON.parse(arg.message);
+
   document.getElementById("sender").innerText = mailData.sender;
   document.getElementById("subject").innerText = mailData.subject;
   document.getElementById("date").innerText = new Date(mailData.date).toLocaleString();
 }
 
-async function displayUser() {
- /* const token = await OfficeRuntime.auth.getAccessToken({ allowSignInPrompt: true });
-  const me = await fetch("https://graph.microsoft.com/v1.0/me", {
-    headers: { Authorization: `Bearer ${token}` }
-  }).then(r => r.json());
-
-  document.getElementById("userInfo").innerText =`${me.displayName} – ${me.mail || me.userPrincipalName}`;*/
-}
-
 document.getElementById("btnYes").onclick = async () => {
-  const token = await OfficeRuntime.auth.getAccessToken({ allowSignInPrompt: true });
+  try {
+    console.log("START SIGNAL");
 
-  const itemId = Office.context.mailbox.convertToRestId(
-    Office.context.mailbox.item.itemId,
-    Office.MailboxEnums.RestVersion.v2_0
-  );
+    const token = await OfficeRuntime.auth.getAccessToken({
+      allowSignInPrompt: true
+    });
 
-  const eml = await fetch(
-    `https://graph.microsoft.com/v1.0/me/messages/${itemId}/$value`,
-    { headers: { Authorization: `Bearer ${token}` } }
-  ).then(r => r.text());
+    console.log("TOKEN OK");
 
-  // ZIP du mail
-  const zip = new JSZip();
-  zip.file("mail.eml", eml);
-  const zipContent = await zip.generateAsync({ type: "base64" });
+    const itemId = Office.context.mailbox.convertToRestId(
+      Office.context.mailbox.item.itemId,
+      Office.MailboxEnums.RestVersion.v2_0
+    );
 
-  // Envoi Graph
-  await fetch("https://graph.microsoft.com/v1.0/me/sendMail", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      message: {
-        subject: "Signalement Hérisson",
-        body: {
-          contentType: "Text",
-          content: `Mail signalé par ${mailData.senderName}`
-        },
-        toRecipients: [
-          { emailAddress: { address: "security@banque-france.fr" } }
-        ],
-        attachments: [
-          {
-            "@odata.type": "#microsoft.graph.fileAttachment",
-            name: "mail.zip",
-            contentType: "application/zip",
-            contentBytes: zipContent
-          }
-        ]
+    // 📩 Récupération mail
+    const eml = await fetch(
+      `https://graph.microsoft.com/v1.0/me/messages/${itemId}/$value`,
+      {
+        headers: { Authorization: `Bearer ${token}` }
       }
-    })
-  });
+    ).then(r => r.text());
 
-  Office.context.ui.messageParent("OK");
-  Office.context.ui.closeContainer();
+    console.log("MAIL OK");
+
+    // 📦 ZIP simple (sans lib externe)
+    const base64 = btoa(unescape(encodeURIComponent(eml)));
+
+    // 📤 Envoi
+    await fetch("https://graph.microsoft.com/v1.0/me/sendMail", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: {
+          subject: "🚨 Signalement Hérisson",
+          body: {
+            contentType: "HTML",
+            content: `
+              <b>Mail signalé</b><br/>
+              Expéditeur: ${mailData.senderName}<br/>
+              Objet: ${mailData.subject}
+            `
+          },
+          toRecipients: [
+            {
+              emailAddress: {
+                address: "Primo.DELLASIEGA.external2@test-banque-france.fr"
+              }
+            }
+          ],
+          attachments: [
+            {
+              "@odata.type": "#microsoft.graph.fileAttachment",
+              name: "mail.eml",
+              contentType: "message/rfc822",
+              contentBytes: base64
+            }
+          ]
+        }
+      })
+    });
+
+    console.log("MAIL SENT ✅");
+
+    Office.context.ui.messageParent("OK");
+    Office.context.ui.closeContainer();
+
+  } catch (err) {
+    console.error("ERROR:", err);
+    alert("Erreur envoi");
+  }
 };
 
 document.getElementById("btnNo").onclick = () => {
-  //Office.context.ui.closeContainer();
-  alert("ok");
+  Office.context.ui.closeContainer();
 };
