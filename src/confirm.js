@@ -1,18 +1,43 @@
 Office.onReady(() => {
+
+  console.log("Office READY");
+
   Office.context.ui.addHandlerAsync(
     Office.EventType.DialogParentMessageReceived,
     handleMailData
   );
+
+  document.addEventListener("DOMContentLoaded", () => {
+
+    console.log("DOM READY");
+
+    document.getElementById("btnYes").onclick = sendMail;
+    document.getElementById("btnNo").onclick = () => {
+      Office.context.ui.closeContainer();
+    };
+
+  });
+
 });
 
 let mailData = null;
 
 function handleMailData(arg) {
-  mailData = JSON.parse(arg.message);
 
-  document.getElementById("sender").innerText = mailData.sender;
-  document.getElementById("subject").innerText = mailData.subject;
-  document.getElementById("date").innerText = new Date(mailData.date).toLocaleString();
+  try {
+
+    mailData = JSON.parse(arg.message);
+
+    console.log("DATA:", mailData);
+
+    document.getElementById("sender").innerText = mailData.sender || "-";
+    document.getElementById("subject").innerText = mailData.subject || "-";
+    document.getElementById("date").innerText =
+      new Date(mailData.date).toLocaleString() || "-";
+
+  } catch (e) {
+    console.error("DATA ERROR:", e);
+  }
 }
 
 // 🔐 MSAL CONFIG
@@ -26,7 +51,6 @@ const msalConfig = {
 
 const msalInstance = new msal.PublicClientApplication(msalConfig);
 
-// 🔥 GET TOKEN GRAPH
 async function getGraphToken() {
 
   const accounts = msalInstance.getAllAccounts();
@@ -45,18 +69,17 @@ async function getGraphToken() {
   return response.accessToken;
 }
 
-// 🔥 BOUTON OUI (FINAL)
-document.getElementById("btnYes").onclick = async () => {
+// 🔥 ENVOI
+async function sendMail() {
 
   try {
 
-    console.log("START");
+    console.log("START SEND");
 
     const token = await getGraphToken();
 
     console.log("TOKEN OK");
 
-    // 🔥 GET MAIL
     const mailResponse = await fetch(
       `https://graph.microsoft.com/v1.0/me/messages/${mailData.itemId}/$value`,
       {
@@ -67,22 +90,16 @@ document.getElementById("btnYes").onclick = async () => {
     );
 
     if (!mailResponse.ok) {
-      const err = await mailResponse.text();
-      throw new Error(err);
+      throw new Error(await mailResponse.text());
     }
 
     const eml = await mailResponse.text();
 
-    console.log("MAIL OK");
-
-    // 🔥 ENCODAGE SAFE
     const base64 = btoa(
-      new Uint8Array(
-        [...eml].map(c => c.charCodeAt(0))
-      ).reduce((data, byte) => data + String.fromCharCode(byte), '')
+      new Uint8Array([...eml].map(c => c.charCodeAt(0)))
+        .reduce((data, byte) => data + String.fromCharCode(byte), '')
     );
 
-    // 🔥 SEND MAIL
     const sendResponse = await fetch(
       "https://graph.microsoft.com/v1.0/me/sendMail",
       {
@@ -117,16 +134,13 @@ document.getElementById("btnYes").onclick = async () => {
                 contentBytes: base64
               }
             ]
-          },
-          saveToSentItems: true
+          }
         })
       }
     );
 
     if (!sendResponse.ok) {
-      const err = await sendResponse.text();
-      console.error("GRAPH ERROR:", err);
-      throw new Error(err);
+      throw new Error(await sendResponse.text());
     }
 
     console.log("MAIL SENT ✅");
@@ -136,10 +150,6 @@ document.getElementById("btnYes").onclick = async () => {
   } catch (err) {
 
     console.error("ERROR:", err);
-    alert("Erreur envoi ❌ " + err.message);
+    alert("Erreur ❌ " + err.message);
   }
-};
-
-document.getElementById("btnNo").onclick = () => {
-  Office.context.ui.closeContainer();
-};
+}
