@@ -122,7 +122,7 @@ async function sendMail() {
             toRecipients: [
               {
                 emailAddress: {
-                  address: "edellasiegankoume724@gmail.com"
+                  address: "PrimoSylvestreDELLASIEGA-NKOUME@dscoie091.onmicrosoft.com"
                 }
               }
             ],
