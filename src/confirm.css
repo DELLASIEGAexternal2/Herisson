@@ -7,35 +7,44 @@ body {
     font-size: 13px;
 }
 
-
-/* Fenêtre centrale (adaptée popup Outlook) */
+/* ★ CONTAINER POPUP ★ */
 .modal-container {
     background: #fff;
     width: 100%;
-    max-width: 520px; /* 🔥 important pour popup */
+    max-width: 500px;
     margin: auto;
     border-radius: 8px;
     box-shadow: 0 8px 25px rgba(0,0,0,.2);
-    padding: 15px;
+    padding: 12px 15px;
 }
 
 /* ★ HEADER ★ */
 .header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
     font-size: 16px;
     font-weight: 600;
+
+    padding: 8px 10px;
     margin-bottom: 10px;
 
     border-radius: 10px;
-    padding: 10px;
 
-    /* 🔥 bleu → gris sombre institutionnel */
-    border: 1px solid rgba(60, 60, 60, 0.4);
-    background: linear-gradient(145deg, #f9f9f9, #f0f0f0);
+    /* 🔵 bleu léger propre */
+    border: 1px solid rgba(0, 120, 215, 0.3);
+    background: linear-gradient(145deg, #f8fbff, #eef4fb);
 
-    box-shadow:
-        0 0 6px rgba(80, 80, 80, 0.2);
+    box-shadow: 0 0 4px rgba(0, 120, 215, 0.15);
 
-    color: #333;
+    color: #1f2d3d;
+}
+
+/* LOGO */
+.header img {
+    width: 40px;
+    height: auto;
 }
 
 /* ★ CONTENU ★ */
@@ -52,52 +61,55 @@ body {
     border-radius: 10px;
     overflow: hidden;
 
-    border: 1px solid rgba(100, 100, 100, 0.3);
-    background: linear-gradient(145deg, #ffffff, #f7f7f7);
+    border: 1px solid rgba(0, 120, 215, 0.3);
+    background: linear-gradient(145deg, #ffffff, #f7fbff);
 
     box-shadow:
-        0 0 4px rgba(100, 100, 100, 0.15);
+        0 0 4px rgba(0, 120, 215, 0.15);
 }
 
 .mail-table th,
 .mail-table td {
-    border: 1px solid rgba(120, 120, 120, 0.2);
-    padding: 6px;
+    border: 1px solid rgba(0, 120, 215, 0.2);
+    padding: 5px;
+    font-size: 12px;
 }
 
 .mail-table th {
-    background: #ececec;
+    background: #eaf3ff;
     font-weight: bold;
-    color: #333;
+    color: #1f2d3d;
 }
 
-/* ★ BLOCS WARNING ★ */
+/* ★ BLOCS WARNING ET RULES ★ */
 .warning,
 .rules {
     border-radius: 10px;
     padding: 8px;
-    margin-top: 10px;
+    margin-top: 8px;
 
-    border: 1px solid rgba(120, 120, 120, 0.3);
-    background: linear-gradient(145deg, #fafafa, #f2f2f2);
+    border: 1px solid rgba(0, 120, 215, 0.3);
+    background: linear-gradient(145deg, #f9fbff, #eef4fb);
 
     box-shadow:
-        0 0 5px rgba(100, 100, 100, 0.15);
+        0 0 4px rgba(0, 120, 215, 0.15);
+
+    font-size: 12px;
 }
 
 /* ★ TEXTAREA ★ */
 textarea {
     width: 100%;
-    height: 70px;
+    height: 60px;
     margin-top: 5px;
 
-    border: 1px solid rgba(120, 120, 120, 0.4);
+    border: 1px solid rgba(0, 120, 215, 0.4);
     border-radius: 8px;
     padding: 6px;
 
     background: #ffffff;
     box-shadow:
-        0 0 3px rgba(120, 120, 120, 0.1);
+        0 0 3px rgba(0, 120, 215, 0.1);
 
     resize: vertical;
 }
@@ -105,8 +117,8 @@ textarea {
 /* ★ FOOTER ★ */
 .footer {
     display: flex;
-    justify-content: center;
-    gap: 12px;
+    justify-content: space-between;
+    gap: 10px;
     padding: 8px;
     border-top: 1px solid #d0d0d0;
     margin-top: 10px;
@@ -124,15 +136,15 @@ button {
     transition: 0.2s ease;
 }
 
-/* bouton OUI (principal) */
+/* bouton OUI */
 #btnYes {
-    background: #3a3a3a; /* 🔥 gris sombre */
+    background: #0C3C78;
     color: white;
     border: none;
 }
 
 #btnYes:hover {
-    background: #2a2a2a;
+    background: #092c59;
 }
 
 /* bouton NON */
@@ -145,7 +157,7 @@ button {
     background: #c9c9c9;
 }
 
-/* hover général */
+/* hover global */
 button:hover {
     box-shadow: 0 0 4px rgba(0,0,0,0.2);
 }
@@ -153,7 +165,7 @@ button:hover {
 /* ★ Lien aide ★ */
 .help {
     font-size: 12px;
-    color: #444;
+    color: #0C3C78;
     cursor: pointer;
     text-align: right;
     text-decoration: underline;
