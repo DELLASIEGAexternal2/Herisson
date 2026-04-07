@@ -1,5 +1,7 @@
 Office.onReady(() => {
 
+  console.log("Office READY");
+
   Office.context.ui.addHandlerAsync(
     Office.EventType.DialogParentMessageReceived,
     handleMailData
@@ -7,13 +9,23 @@ Office.onReady(() => {
 
 });
 
+// 🔥 attendre que le DOM soit prêt AVANT de binder les boutons
 window.onload = () => {
+
+  console.log("WINDOW READY");
 
   const btnYes = document.getElementById("btnYes");
   const btnNo = document.getElementById("btnNo");
 
-  btnYes.onclick = sendMail;
-  btnNo.onclick = () => Office.context.ui.closeContainer();
+  if (!btnYes || !btnNo) {
+    console.error("Boutons non trouvés");
+    return;
+  }
+
+  btnYes.addEventListener("click", sendMail);
+  btnNo.addEventListener("click", () => {
+    Office.context.ui.closeContainer();
+  });
 };
 
 let mailData = null;
@@ -24,56 +36,68 @@ function handleMailData(arg) {
 
     mailData = JSON.parse(arg.message);
 
+    console.log("DATA:", mailData);
+
     document.getElementById("sender").innerText = mailData.sender || "-";
     document.getElementById("subject").innerText = mailData.subject || "-";
     document.getElementById("date").innerText =
       new Date(mailData.date).toLocaleString() || "-";
 
   } catch (e) {
-    console.error("Erreur data:", e);
+    console.error("DATA ERROR:", e);
   }
 }
 
-
-// 🔐 MSAL
-const msalInstance = new msal.PublicClientApplication({
+// 🔐 MSAL CONFIG
+const msalConfig = {
   auth: {
     clientId: "e92a8324-40d8-4ce5-876d-99df6b07acf9",
     authority: "https://login.microsoftonline.com/common",
     redirectUri: window.location.origin
   }
-});
+};
 
-async function getToken() {
+const msalInstance = new msal.PublicClientApplication(msalConfig);
+
+// 🔥 TOKEN GRAPH (fix popup)
+async function getGraphToken() {
 
   try {
-    const r = await msalInstance.acquireTokenSilent({
+    const response = await msalInstance.acquireTokenSilent({
       scopes: ["Mail.Read", "Mail.Send"]
     });
-    return r.accessToken;
 
-  } catch {
+    return response.accessToken;
 
-    const r = await msalInstance.loginPopup({
+  } catch (e) {
+
+    console.log("Silent KO → popup");
+
+    const loginResponse = await msalInstance.loginPopup({
       scopes: ["Mail.Read", "Mail.Send"],
       prompt: "select_account"
     });
 
-    return r.accessToken;
+    return loginResponse.accessToken;
   }
 }
 
-
-// 🔥 ENVOI PRO AVEC .EML + COMMENTAIRE
+// 🔥 ENVOI
 async function sendMail() {
 
   try {
 
-    if (!mailData) throw new Error("Aucune donnée mail");
+    console.log("CLICK OK");
 
-    const token = await getToken();
+    if (!mailData) {
+      throw new Error("Pas de données mail");
+    }
 
-    // 🔥 Récupération du mail réel
+    const token = await getGraphToken();
+
+    console.log("TOKEN OK");
+
+    // GET MAIL
     const mailResponse = await fetch(
       `https://graph.microsoft.com/v1.0/me/messages/${mailData.itemId}/$value`,
       {
@@ -84,22 +108,18 @@ async function sendMail() {
     );
 
     if (!mailResponse.ok) {
-      throw new Error("Erreur récupération mail");
+      throw new Error(await mailResponse.text());
     }
 
     const eml = await mailResponse.text();
 
-    // 🔥 Encodage robuste
     const base64 = btoa(
       new Uint8Array([...eml].map(c => c.charCodeAt(0)))
         .reduce((data, byte) => data + String.fromCharCode(byte), '')
     );
 
-    // 🔥 commentaire utilisateur
-    const comment = document.getElementById("comment")?.value || "Aucun";
-
-    // 🔥 ENVOI
-    const response = await fetch(
+    // SEND MAIL
+    const sendResponse = await fetch(
       "https://graph.microsoft.com/v1.0/me/sendMail",
       {
         method: "POST",
@@ -113,18 +133,15 @@ async function sendMail() {
             body: {
               contentType: "HTML",
               content: `
-                <b>Signalement utilisateur</b><br><br>
+                Mail suspect<br>
                 Expéditeur: ${mailData.sender}<br>
-                Sujet: ${mailData.subject}<br>
-                Date: ${mailData.date}<br><br>
-                <b>Commentaire:</b><br>
-                ${comment}
+                Sujet: ${mailData.subject}
               `
             },
             toRecipients: [
               {
                 emailAddress: {
-                  address: "PrimoSylvestreDELLASIEGA-NKOUME@dscoie091.onmicrosoft.com"
+                  address: "PrimoSylvestreDELLASIEGA-NKOUME@dscoie091.onmicrosoft.com
                 }
               }
             ],
@@ -141,18 +158,19 @@ async function sendMail() {
       }
     );
 
-    if (!response.ok) {
-      const err = await response.text();
-      throw new Error(err);
+    if (!sendResponse.ok) {
+      throw new Error(await sendResponse.text());
     }
+
+    console.log("MAIL SENT ✅");
 
     alert("Signalement envoyé ✔");
 
     Office.context.ui.closeContainer();
 
-  } catch (e) {
+  } catch (err) {
 
-    console.error(e);
-    alert("Erreur ❌ " + e.message);
+    console.error("ERROR:", err);
+    alert("Erreur ❌ " + err.message);
   }
 }
