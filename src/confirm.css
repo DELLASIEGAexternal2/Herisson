@@ -1,9 +1,9 @@
 /* =========================
-   STYLE GLOBAL
+   GLOBAL
    ========================= */
 body {
     font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-    background: #eaeaea;
+    background: #e9edf2;
     margin: 0;
     padding: 0;
     font-size: 12px;
@@ -11,11 +11,11 @@ body {
 }
 
 /* =========================
-   CONTAINER – DIMENSIONS FIXES
+   FENÊTRE PRINCIPALE (FIXE)
    ========================= */
 .modal-container {
-    width: 620px;
-    height: 580px;
+    width: 760px;
+    height: 520px;
 
     background: #ffffff;
 
@@ -24,38 +24,44 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
 
-    border-radius: 12px;
-    border: 1px solid #a0a0a0;
+    border-radius: 14px;
+    border: 1px solid #9fbad7;
 
-    /* 🔴 Ombre sécurité rouge + noire */
+    /* 🔴 Ombre rougeâtre + profondeur */
     box-shadow:
-        0 0 0 2px rgba(180, 0, 0, 0.6),
-        0 12px 28px rgba(0, 0, 0, 0.45);
+        0 0 0 2px rgba(170, 30, 30, 0.55),
+        0 10px 26px rgba(0, 0, 0, 0.35);
 
     overflow: hidden;
 }
 
 /* =========================
-   HEADER – STYLE OUTLOOK NATIF
+   EN-TÊTE (BLEU CIEL CLAIR)
    ========================= */
 .header {
-    background: #f2f2f2;
-    border-bottom: 1px solid #c8c8c8;
-
-    padding: 6px 10px;
-
-    font-size: 13px;
-    font-weight: 600;
-    color: #000;
-
     display: flex;
     align-items: center;
     gap: 10px;
+
+    padding: 10px 14px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    color: #1f2d3d;
+
+    background: linear-gradient(
+        to bottom,
+        #f4f9ff,
+        #e8f1fb
+    );
+
+    border-bottom: 1px solid #b7cbe3;
 }
 
-/* Logo Outlook / sécurité */
+/* Logo */
 .header img {
-    width: 22px;
+    width: 26px;
     height: auto;
 }
 
@@ -63,55 +69,65 @@ body {
    CONTENU
    ========================= */
 .content {
-    padding: 12px;
-    height: calc(100% - 110px);
+    padding: 14px;
+    height: calc(100% - 120px);
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
 /* =========================
-   TABLEAU MAIL – ALIGNEMENT STRICT
+   TABLEAU INFOS MESSAGE
    ========================= */
 .mail-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 
-    border: 1px solid #c8c8c8;
+    border: 1px solid #b7cbe3;
     background: #ffffff;
 }
 
 .mail-table th,
 .mail-table td {
-    border: 1px solid #c8c8c8;
-    padding: 5px 8px;
+    border: 1px solid #c6d6ea;
+    padding: 6px 8px;
     font-size: 12px;
     vertical-align: top;
+    word-break: break-word;
 }
 
 .mail-table th {
-    width: 140px;
-    background: #f4f4f4;
+    width: 150px;
+    background: #edf4fd;
     font-weight: 600;
+    color: #1f2d3d;
     text-align: left;
 }
 
 /* =========================
-   BLOCS D’INFORMATION
+   BLOCS REGLES / INFO
    ========================= */
 .warning,
 .rules {
-    margin-top: 10px;
-    padding: 8px;
+    margin-top: 12px;
+    padding: 10px;
 
-    background: #f7f7f7;
-    border: 1px solid #c8c8c8;
-    border-left: 4px solid #b00000;
+    background: linear-gradient(
+        to bottom,
+        #f7fbff,
+        #eef4fb
+    );
+
+    border: 1px solid #b7cbe3;
+    border-left: 5px solid #c43030;
+
+    border-radius: 8px;
 
     font-size: 12px;
 }
 
 /* =========================
-   TEXTAREA – BIEN CENTRÉ
+   ZONE COMMENTAIRE
    ========================= */
 textarea {
     width: 100%;
@@ -122,59 +138,65 @@ textarea {
     font-size: 12px;
     font-family: "Segoe UI", Tahoma, Arial;
 
-    border: 1px solid #a8a8a8;
-    border-radius: 4px;
+    border: 1px solid #9fbad7;
+    border-radius: 6px;
 
-    padding: 6px;
+    padding: 8px;
+    box-sizing: border-box;
+
+    background: #ffffff;
     resize: none;
 }
 
 /* =========================
-   FOOTER – BOUTONS OUTLOOK
+   PIED DE PAGE
    ========================= */
 .footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    padding: 8px 12px;
-    border-top: 1px solid #c8c8c8;
-    background: #f2f2f2;
+    padding: 10px 14px;
+
+    border-top: 1px solid #b7cbe3;
+    background: #f3f7fc;
 }
 
 /* =========================
-   BOUTONS
+   BOUTONS (ARRONDIS LÉGER)
    ========================= */
 button {
-    min-width: 95px;
-    padding: 6px 14px;
+    min-width: 100px;
+    padding: 6px 16px;
 
     font-family: "Segoe UI", Tahoma, Arial;
     font-size: 12px;
 
-    border-radius: 4px;
-    border: 1px solid #adadad;
+    border-radius: 6px;
+    border: 1px solid #aabbd3;
 
-    background: #e6e6e6;
+    background: #f0f0f0;
+    color: #000;
+
     cursor: pointer;
 }
 
 button:hover {
-    background: #dcdcdc;
+    background: #e2e2e2;
 }
 
-/* Bouton SIGNALER */
+/* Bouton principal */
 #btnYes {
-    background: #0078d4;
-    border-color: #0078d4;
+    background: #0c5fb3;
     color: #ffffff;
+    border-color: #0c5fb3;
 }
 
 #btnYes:hover {
-    background: #006cbe;
+    background: #094a8c;
 }
 
-/* Bouton ANNULER */
+/* Bouton secondaire */
 #btnNo {
     background: #e6e6e6;
     color: #000;
@@ -185,7 +207,7 @@ button:hover {
    ========================= */
 .help {
     font-size: 11px;
-    color: #0078d4;
+    color: #0c5fb3;
     text-decoration: underline;
     cursor: pointer;
 }
