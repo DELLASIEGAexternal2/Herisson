@@ -86,7 +86,7 @@ Sujet: ${mailData.subject}
             toRecipients: [
               {
                 emailAddress: {
-                  address: "PrimoSylvestreDELLASIEGA-NKOUME@dscoie091.onmicrosoft.com"
+                  address: "edellasiegankoume724@gmail.com"
                 }
               }
             ]
