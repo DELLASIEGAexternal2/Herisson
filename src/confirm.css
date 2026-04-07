@@ -1,221 +1,120 @@
-/* ★ STYLE GLOBAL ★ */
+/* ===== GLOBAL ===== */
 body {
-    font-family: Segoe UI, Arial, sans-serif;
-    background-color: #ffffff;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #f4f6f9;
     margin: 0;
-    padding: 10px;
+    padding: 15px;
     font-size: 13px;
+    color: #1a1a1a;
 }
 
-
-/* Arrière-plan modal */
-.modal-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.20);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px;
-    overflow: auto;
-}
-
-/* Fenêtre centrale */
+/* ===== CONTAINER ===== */
 .modal-container {
-    background: #fff;
-    width: 85vw;
-    max-width: 1100px;
-    border-radius: 8px;
-    box-shadow: 0 10px 40px rgba(0,0,0,.25);
-    padding: 20px 30px;
+    background: #ffffff;
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+    border-radius: 10px;
+    padding: 20px;
+
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
-/* Ton header existant */
+/* ===== HEADER ===== */
 .header {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+
+    color: #0C3C78;
+    border-bottom: 2px solid #e6e6e6;
+    padding-bottom: 8px;
 }
 
-/* Table */
+/* ===== TABLE ===== */
 .mail-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
 }
+
 .mail-table th {
     text-align: left;
-    padding: 10px;
-    background: #f2f2f2;
-}
-.mail-table td {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-}
-
-/* Footer boutons */
-.footer {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #ddd;
-    text-align: right;
-}
-
-#btnYes {
-    background: #0C3C78;
-    color: #fff;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-#btnNo {
-    background: #ccc;
-    color: #333;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    margin-right: 10px;
-}
-
-.help {
-    margin-top: 15px;
+    padding: 8px;
+    background: #eef3fb;
     color: #0C3C78;
-    cursor: pointer;
-    text-align: right;
     font-weight: 600;
 }
 
-
-
-
-
-
-/* ★ HEADER (même style que les blocs de DroitDéco) ★ */
-.header {
-    border-radius: 12px;
-    padding: 10px;
-    margin-bottom: 15px;
-
-    border: 1px solid rgba(0, 90, 255, 0.6);
-    background: linear-gradient(145deg, #fdfdfd, #f3f7ff);
-    box-shadow:
-        0 0 8px rgba(0, 110, 255, 0.4),
-        0 0 4px rgba(255, 0, 0, 0.25);
-
-    font-weight: bold;
-}
-
-/* ★ CONTENU ★ */
-.content {
-    padding: 10px;
-}
-
-/* ★ TABLEAU MAIL (tableau “éclairé” dans le style DroitDéco) ★ */
-.mail-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 15px;
-
-    border-radius: 12px;
-    overflow: hidden;
-
-    border: 1px solid rgba(0, 90, 255, 0.5);
-    background: linear-gradient(145deg, #ffffff, #f5f8ff);
-
-    box-shadow:
-        0 0 6px rgba(0, 110, 255, 0.3),
-        0 0 3px rgba(255, 0, 0, 0.15);
-}
-
-.mail-table th,
 .mail-table td {
-    border: 1px solid rgba(0, 90, 255, 0.25);
-    padding: 6px;
+    padding: 8px;
+    border-bottom: 1px solid #e5e5e5;
 }
 
-.mail-table th {
-    background: #e8f1ff;
-    font-weight: bold;
-}
-
-/* ★ BLOCS WARNING ET RULES (style “alert-box” DD) ★ */
-
-.warning,
-.rules {
-    border-radius: 12px;
+/* ===== ALERT BOX ===== */
+.warning {
+    margin-top: 15px;
     padding: 10px;
-    margin-top: 12px;
-
-    border: 1px solid rgba(0, 90, 255, 0.6);
-    background: linear-gradient(145deg, #fdfdfd, #f3f7ff);
-
-    box-shadow:
-        0 0 8px rgba(0, 110, 255, 0.4),
-        0 0 4px rgba(255, 0, 0, 0.25);
+    border-left: 4px solid #d9534f;
+    background: #fff5f5;
+    border-radius: 6px;
 }
 
-/* ★ TEXTAREA (style doux modernisé) ★ */
+/* ===== TEXTAREA ===== */
 textarea {
     width: 100%;
-    height: 90px;
-    margin-top: 6px;
-
-    border: 1px solid rgba(0, 90, 255, 0.5);
-    border-radius: 10px;
+    height: 80px;
+    margin-top: 10px;
     padding: 8px;
 
-    background: #ffffff;
-    box-shadow:
-        0 0 4px rgba(0, 110, 255, 0.2),
-        0 0 2px rgba(255, 0, 0, 0.1);
-
+    border-radius: 6px;
+    border: 1px solid #ccc;
     resize: vertical;
 }
 
-/* ★ FOOTER (boutons alignés) ★ */
+/* ===== FOOTER ===== */
 .footer {
     display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 10px;
-    border-top: 1px solid #d0d0d0;
-    margin-top: 10px;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
 }
 
-/* ★ BOUTONS STYLE OUTLOOK (même que DroitDéco) ★ */
+/* ===== BUTTONS ===== */
 button {
-    min-width: 80px;
-    padding: 6px 12px;
-    font-family: Segoe UI, Arial;
-
-    border: 1px solid #d0d0d0;
+    padding: 8px 14px;
     border-radius: 6px;
-    background-color: #fafafa;
-    transition: 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
 }
 
-button:hover {
-    background-color: #e8f1ff;
-    border-color: #0078d7;
-    box-shadow: 0 0 6px rgba(0, 120, 215, 0.4);
+/* bouton principal */
+#btnYes {
+    background-color: #0C3C78;
+    color: white;
 }
 
-/* ★ Lien aide (amélioré) ★ */
+#btnYes:hover {
+    background-color: #092c59;
+}
+
+/* bouton secondaire */
+#btnNo {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+#btnNo:hover {
+    background-color: #cfcfcf;
+}
+
+/* ===== HELP ===== */
 .help {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
+    margin-top: 10px;
     font-size: 12px;
-    color: #0078d4;
+    color: #0C3C78;
+    text-align: right;
     cursor: pointer;
     text-decoration: underline;
 }
