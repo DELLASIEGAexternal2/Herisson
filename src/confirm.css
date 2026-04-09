@@ -1,0 +1,126 @@
+body {
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  background: #e9edf2;
+  margin: 0;
+  font-size: 12px;
+}
+
+/* Fenêtre */
+.modal-container {
+  width: 760px;
+  height: 520px;
+  background: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 14px;
+  border: 1px solid #9fbad7;
+  box-shadow:
+    0 0 0 2px rgba(170, 30, 30, 0.55),
+    0 10px 26px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-size: 15px;
+  font-weight: 600;
+  background: linear-gradient(#f4f9ff, #e8f1fb);
+  border-bottom: 1px solid #b7cbe3;
+}
+
+.header img {
+  width: 26px;
+}
+
+/* Content */
+.content {
+  padding: 14px;
+  height: calc(100% - 110px);
+  overflow-y: auto;
+}
+
+/* Table mail */
+.mail-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 14px;
+}
+
+.mail-table th,
+.mail-table td {
+  border: 1px solid #c6d6ea;
+  padding: 6px 8px;
+}
+
+.mail-table th {
+  background: #edf4fd;
+  text-align: left;
+}
+
+.mail-table tr.selected {
+  background: #0c5fb3;
+  color: #fff;
+}
+
+/* Blocs */
+.warning,
+.rules {
+  margin-top: 12px;
+  padding: 10px;
+  background: linear-gradient(#f7fbff, #eef4fb);
+  border: 1px solid #b7cbe3;
+  border-left: 5px solid #c43030;
+  border-radius: 8px;
+}
+
+/* Textarea */
+textarea {
+  width: 100%;
+  height: 90px;
+  margin-top: 6px;
+  border: 1px solid #9fbad7;
+  border-radius: 6px;
+  padding: 8px;
+  resize: none;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-top: 1px solid #b7cbe3;
+  background: #f3f7fc;
+}
+
+/* Buttons */
+button {
+  min-width: 100px;
+  padding: 6px 16px;
+  border-radius: 6px;
+  border: 1px solid #aabbd3;
+  cursor: pointer;
+}
+
+#btnYes {
+  background: #0c5fb3;
+  color: #fff;
+}
+
+#btnNo {
+  background: #e6e6e6;
+}
+
+.help {
+  font-size: 11px;
+  color: #0c5fb3;
+  text-decoration: underline;
+  cursor: pointer;
+}

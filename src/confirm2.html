@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Demande de confirmation – Hérisson</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Office.js -->
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+  <!-- MSAL -->
+  <script src="https://alcdn.msauth.net/browser/2.38.1/js/msal-browser.min.js"></script>
+
+  <link rel="stylesheet" href="confirm.css" />
+</head>
+
+<body>
+  <div class="modal-container">
+
+    <!-- HEADER -->
+    <div class="header">
+      <img src="../assets/icon-32.png" alt="Hérisson" />
+      <span>Demande de confirmation – PRODUCTION – 1.0.0.60</span>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- TABLE MESSAGE -->
+      <table class="mail-table">
+        <thead>
+          <tr>
+            <th>Émetteur</th>
+            <th>Objet</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="selected">
+            <td id="sender">—</td>
+            <td id="subject">—</td>
+            <td id="date">—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- WARNING -->
+      <div class="warning">
+        <strong>Vous êtes sur le point de signaler le message suspect suivant :</strong><br><br>
+        En confirmant, ce mail suspect sera envoyé afin d’être analysé.
+        <br><br>
+        <b>Attention :</b> le bouton <b>Signaler</b> n’est pas un anti-spam.
+        Il génère une alerte traitée manuellement par les analystes du CERT‑BdF.
+      </div>
+
+      <!-- RULES -->
+      <div class="rules">
+        <strong>Bonnes pratiques de signalement</strong>
+        <ol>
+          <li>Vérifier que le message ne provient pas d’une adresse interne Banque de France.</li>
+          <li>Contrôler que l’expéditeur correspond bien à l’entreprise mentionnée.</li>
+          <li>Le message est inattendu.</li>
+          <li>Présence de liens, pièces jointes ou invitation à une action douteuse.</li>
+        </ol>
+      </div>
+
+      <!-- COMMENT -->
+      <label for="comment">Message (facultatif) :</label>
+      <textarea id="comment"
+        placeholder="Ajoutez un commentaire utile pour l’analyse du CERT…"></textarea>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <span class="help" id="btnHelp">Aide</span>
+      <div>
+        <button id="btnNo">Non</button>
+        <button id="btnYes">Oui</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="confirm.js"></script>
+</body>
+</html>
