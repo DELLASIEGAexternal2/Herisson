@@ -1,57 +1,73 @@
-body {
-  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-  background: #e9edf2;
+/* =========================
+   BASE
+   ========================= */
+html, body {
   margin: 0;
-  font-size: 11px;
+  padding: 0;
+  height: 100%;
   overflow: hidden;
+  font-family: "Segoe UI", SegoeUI, Tahoma, Arial, sans-serif;
+  font-size: 11px;
+  background: #e9edf2;
+  color: #000;
 }
 
-/* Fenêtre Outlook (chrome compris) */
+/* =========================
+   FENÊTRE (Outlook impose la taille)
+   ========================= */
 .modal-container {
-  width: 700px;              /* Outlook la forcera */
+  width: 700px;
   height: 500px;
   background: #ffffff;
   border-radius: 8px;
   border: 1px solid #9fbad7;
   box-shadow:
     0 0 0 2px rgba(170, 30, 30, 0.55),
-    0 4px 14px rgba(0, 0, 0, 0.25);
+    0 4px 12px rgba(0, 0, 0, 0.25);
   overflow: hidden;
 }
 
-/* ✅ GRILLE CENTRALE (clé du problème) */
-.content {
-  width: 640px;              /* ✅ largeur utile réelle */
-  margin: 0 auto;            /* ✅ supprime le vide latéral */
-  padding: 6px 0;
-  height: calc(100% - 78px); /* header + footer */
-  box-sizing: border-box;
-}
-
-/* HEADER */
+/* =========================
+   HEADER
+   ========================= */
 .header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 22px 1fr;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 6px 10px;
-  font-size: 13px;
-  font-weight: 600;
   background: linear-gradient(#f4f9ff, #e8f1fb);
   border-bottom: 1px solid #b7cbe3;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .header img {
-  width: 18px;               /* ✅ logo visible */
-  height: auto;
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
-/* TABLE MESSAGE */
+/* =========================
+   CONTENU – GRILLE CENTRALE
+   ========================= */
+.content {
+  width: 640px;              /* ✅ largeur utile réelle Outlook */
+  margin: 0 auto;
+  padding: 6px 0;
+  height: calc(100% - 76px); /* header + footer */
+  box-sizing: border-box;
+}
+
+/* =========================
+   TABLE MESSAGE
+   ========================= */
 .mail-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 6px;
   background: #ffffff;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  margin-bottom: 6px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.18);
 }
 
 .mail-table th,
@@ -65,6 +81,7 @@ body {
 
 .mail-table th {
   background: #edf4fd;
+  font-weight: 600;
 }
 
 .mail-table tr.selected {
@@ -72,47 +89,74 @@ body {
   color: #ffffff;
 }
 
-/* BLOCS */
-.warning,
-.rules {
+/* =========================
+   BLOCS TEXTE (DÉLIMITATION CLAIRE)
+   ========================= */
+.warning {
   margin-top: 6px;
   padding: 6px 8px;
   background: #f7fbff;
   border: 1px solid #b7cbe3;
-  border-radius: 5px;
-  box-shadow: inset 0 1px 0 #ffffff;
-}
-
-.warning {
   border-left: 4px solid #c43030;
+  border-radius: 4px;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 1px rgba(0,0,0,0.1);
 }
 
 .rules {
+  margin-top: 6px;
+  padding: 6px 8px;
   background: #eef4fb;
+  border: 1px solid #b7cbe3;
+  border-radius: 4px;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 1px rgba(0,0,0,0.1);
 }
 
 .rules ol,
 .rules ul {
   margin: 4px 0 0 14px;
+  padding: 0;
 }
 
-/* COMMENTAIRE */
+/* =========================
+   COMMENTAIRE
+   ========================= */
+label {
+  display: block;
+  margin-top: 6px;
+}
+
 textarea {
   width: 100%;
-  height: 48px;              /* ✅ compact */
-  margin-top: 4px;
+  height: 48px;
+  margin-top: 2px;
+  padding: 5px;
   font-size: 11px;
   border: 1px solid #9fbad7;
-  border-radius: 4px;
-  padding: 5px;
+  border-radius: 3px;
   resize: none;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+  background: #ffffff;
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,0.18);
 }
 
-/* FOOTER REMONTÉ */
+/* =========================
+   QUESTION FINALE
+   ========================= */
+.final-question {
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+/* =========================
+   FOOTER (REMONTÉ & LISIBLE)
+   ========================= */
 .footer {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
   padding: 4px 10px;
   border-top: 1px solid #b7cbe3;
@@ -120,17 +164,29 @@ textarea {
   box-shadow: 0 -1px 2px rgba(0,0,0,0.15);
 }
 
+.footer > div {
+  display: flex;
+  gap: 8px;
+}
+
 button {
   min-width: 78px;
   padding: 4px 10px;
   font-size: 11px;
-  border-radius: 4px;
+  border-radius: 3px;
   border: 1px solid #aabbd3;
+  background: #f0f0f0;
+  cursor: pointer;
 }
 
 #btnYes {
   background: #0c5fb3;
-  color: #fff;
+  color: #ffffff;
+  border-color: #0c5fb3;
+}
+
+#btnYes:hover {
+  background: #094a8c;
 }
 
 .help {
