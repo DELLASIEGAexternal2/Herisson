@@ -6,25 +6,33 @@ body {
   overflow: hidden;
 }
 
-/* Fenêtre */
+/* Fenêtre Outlook (chrome compris) */
 .modal-container {
-  width: 700px;
+  width: 700px;              /* Outlook la forcera */
   height: 500px;
   background: #ffffff;
-  margin: 0 auto;
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid #9fbad7;
   box-shadow:
     0 0 0 2px rgba(170, 30, 30, 0.55),
-    0 6px 18px rgba(0, 0, 0, 0.3);
+    0 4px 14px rgba(0, 0, 0, 0.25);
   overflow: hidden;
 }
 
-/* Header */
+/* ✅ GRILLE CENTRALE (clé du problème) */
+.content {
+  width: 640px;              /* ✅ largeur utile réelle */
+  margin: 0 auto;            /* ✅ supprime le vide latéral */
+  padding: 6px 0;
+  height: calc(100% - 78px); /* header + footer */
+  box-sizing: border-box;
+}
+
+/* HEADER */
 .header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding: 6px 10px;
   font-size: 13px;
   font-weight: 600;
@@ -32,29 +40,27 @@ body {
   border-bottom: 1px solid #b7cbe3;
 }
 
-/* Contenu global */
-.content {
-  padding: 6px 8px;            /* 🔽 moins d’espace sur les côtés */
-  height: calc(100% - 80px);   /* footer plus haut */
-  box-sizing: border-box;
+.header img {
+  width: 18px;               /* ✅ logo visible */
+  height: auto;
 }
 
-/* === BLOCS VISUELS === */
-
-/* Tableau message */
+/* TABLE MESSAGE */
 .mail-table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 6px;
-  font-size: 11px;
   background: #ffffff;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15); /* ✅ séparation visuelle */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
 
 .mail-table th,
 .mail-table td {
   border: 1px solid #c6d6ea;
   padding: 4px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mail-table th {
@@ -66,68 +72,57 @@ body {
   color: #ffffff;
 }
 
-/* Texte principal */
-.intro,
-.confirm,
-.attention {
-  margin: 4px 0;
-  line-height: 1.25;
-}
-
-/* Bloc avertissement */
-.warning {
-  margin-top: 6px;
-  padding: 6px 8px;
-  background: #f7fbff;
-  border: 1px solid #b7cbe3;
-  border-left: 4px solid #c43030;
-  border-radius: 5px;
-  box-shadow: inset 0 1px 0 #ffffff; /* ✅ style Windows */
-}
-
-/* Bonnes pratiques */
+/* BLOCS */
+.warning,
 .rules {
   margin-top: 6px;
   padding: 6px 8px;
-  background: #eef4fb;
+  background: #f7fbff;
   border: 1px solid #b7cbe3;
   border-radius: 5px;
   box-shadow: inset 0 1px 0 #ffffff;
 }
 
+.warning {
+  border-left: 4px solid #c43030;
+}
+
+.rules {
+  background: #eef4fb;
+}
+
 .rules ol,
 .rules ul {
   margin: 4px 0 0 14px;
-  padding: 0;
 }
 
-/* Commentaire */
+/* COMMENTAIRE */
 textarea {
   width: 100%;
-  height: 55px;
+  height: 48px;              /* ✅ compact */
   margin-top: 4px;
   font-size: 11px;
   border: 1px solid #9fbad7;
   border-radius: 4px;
-  padding: 6px;
+  padding: 5px;
   resize: none;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
 }
 
-/* === FOOTER REMONTÉ === */
+/* FOOTER REMONTÉ */
 .footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 10px; /* 🔼 plus compact */
+  padding: 4px 10px;
   border-top: 1px solid #b7cbe3;
   background: #f3f7fc;
-  box-shadow: 0 -1px 2px rgba(0,0,0,0.15); /* ✅ séparation claire */
+  box-shadow: 0 -1px 2px rgba(0,0,0,0.15);
 }
 
 button {
-  min-width: 80px;
-  padding: 4px 12px;
+  min-width: 78px;
+  padding: 4px 10px;
   font-size: 11px;
   border-radius: 4px;
   border: 1px solid #aabbd3;
