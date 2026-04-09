@@ -1,82 +1,61 @@
-/* =========================
-   BASE
-   ========================= */
+/* ===== BASE ===== */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
   overflow: hidden;
-  font-family: "Segoe UI", SegoeUI, Tahoma, Arial, sans-serif;
+  font-family: "Segoe UI", Arial, sans-serif;
   font-size: 11px;
-  background: #e9edf2;
-  color: #000;
+  background: #e6ebf1;
+  color: #1a1a1a;
 }
 
-/* =========================
-   FENÊTRE (Outlook impose la taille)
-   ========================= */
+/* ===== CONTAINER ===== */
 .modal-container {
   width: 700px;
   height: 500px;
   background: #ffffff;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 1px solid #9fbad7;
-  box-shadow:
-    0 0 0 2px rgba(170, 30, 30, 0.55),
-    0 4px 12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
   overflow: hidden;
 }
 
-/* =========================
-   HEADER
-   ========================= */
+/* ===== HEADER ===== */
 .header {
   display: grid;
   grid-template-columns: 22px 1fr;
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
-  background: linear-gradient(#f4f9ff, #e8f1fb);
+  background: linear-gradient(#f2f6fb, #e4edf7);
   border-bottom: 1px solid #b7cbe3;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
 }
 
-.header img {
-  width: 18px;
-  height: 18px;
-  display: block;
-}
-
-/* =========================
-   CONTENU – GRILLE CENTRALE
-   ========================= */
+/* ===== CONTENT ===== */
 .content {
-  width: 640px;              /* ✅ largeur utile réelle Outlook */
+  width: 640px;
   margin: 0 auto;
   padding: 6px 0;
-  height: calc(100% - 76px); /* header + footer */
+  height: calc(100% - 76px);
   box-sizing: border-box;
+  overflow-y: auto;
 }
 
-/* =========================
-   TABLE MESSAGE
-   ========================= */
+/* ===== TABLE ===== */
 .mail-table {
   width: 100%;
   border-collapse: collapse;
-  background: #ffffff;
   margin-bottom: 6px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.18);
 }
 
 .mail-table th,
 .mail-table td {
   border: 1px solid #c6d6ea;
   padding: 4px 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 11px;
 }
 
 .mail-table th {
@@ -85,90 +64,68 @@ html, body {
 }
 
 .mail-table tr.selected {
-  background: #0c5fb3;
-  color: #ffffff;
+  background: #2f5fa7;
+  color: #fff;
 }
 
-/* =========================
-   BLOCS TEXTE (DÉLIMITATION CLAIRE)
-   ========================= */
+/* ===== WARNING ===== */
 .warning {
   margin-top: 6px;
   padding: 6px 8px;
-  background: #f7fbff;
+  background: #f5f8fc;
   border: 1px solid #b7cbe3;
-  border-left: 4px solid #c43030;
-  border-radius: 4px;
-  box-shadow:
-    inset 0 1px 0 #ffffff,
-    0 1px 1px rgba(0,0,0,0.1);
+  border-left: 3px solid #c43030;
+  border-radius: 3px;
+  line-height: 1.3;
 }
 
+/* ===== RULES ===== */
 .rules {
   margin-top: 6px;
   padding: 6px 8px;
-  background: #eef4fb;
+  background: #eef3f9;
   border: 1px solid #b7cbe3;
-  border-radius: 4px;
-  box-shadow:
-    inset 0 1px 0 #ffffff,
-    0 1px 1px rgba(0,0,0,0.1);
+  border-radius: 3px;
+  line-height: 1.3;
 }
 
-.rules ol,
+.rules ol {
+  margin: 4px 0 0 16px;
+}
+
 .rules ul {
-  margin: 4px 0 0 14px;
-  padding: 0;
+  margin: 2px 0 0 14px;
 }
 
-/* =========================
-   COMMENTAIRE
-   ========================= */
-label {
-  display: block;
-  margin-top: 6px;
-}
-
+/* ===== TEXTAREA ===== */
 textarea {
   width: 100%;
-  height: 48px;
+  height: 50px;
   margin-top: 2px;
   padding: 5px;
   font-size: 11px;
   border: 1px solid #9fbad7;
   border-radius: 3px;
   resize: none;
-  background: #ffffff;
-  box-shadow:
-    inset 0 1px 2px rgba(0,0,0,0.18);
 }
 
-/* =========================
-   QUESTION FINALE
-   ========================= */
+/* ===== QUESTION ===== */
 .final-question {
   margin-top: 6px;
   font-weight: 600;
 }
 
-/* =========================
-   FOOTER (REMONTÉ & LISIBLE)
-   ========================= */
+/* ===== FOOTER ===== */
 .footer {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 4px 10px;
   border-top: 1px solid #b7cbe3;
   background: #f3f7fc;
-  box-shadow: 0 -1px 2px rgba(0,0,0,0.15);
 }
 
-.footer > div {
-  display: flex;
-  gap: 8px;
-}
-
+/* ===== BUTTONS ===== */
 button {
   min-width: 78px;
   padding: 4px 10px;
@@ -180,18 +137,22 @@ button {
 }
 
 #btnYes {
-  background: #0c5fb3;
-  color: #ffffff;
-  border-color: #0c5fb3;
+  background: #2f5fa7;
+  color: white;
+  border-color: #2f5fa7;
 }
 
 #btnYes:hover {
-  background: #094a8c;
+  background: #244c86;
 }
 
+#btnNo {
+  background: #e1e5ea;
+}
+
+/* ===== HELP ===== */
 .help {
   font-size: 10px;
-  color: #0c5fb3;
+  color: #2f5fa7;
   text-decoration: underline;
-  cursor: pointer;
 }
