@@ -1,16 +1,20 @@
-/* ===== BASE ===== */
+/* =========================
+   BASE
+   ========================= */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
   overflow: hidden;
-  font-family: "Segoe UI", Arial, sans-serif;
+  font-family: "Segoe UI", SegoeUI, Tahoma, Arial, sans-serif;
   font-size: 11px;
   background: #e6ebf1;
   color: #1a1a1a;
 }
 
-/* ===== CONTAINER ===== */
+/* =========================
+   FENÊTRE
+   ========================= */
 .modal-container {
   width: 700px;
   height: 500px;
@@ -21,20 +25,30 @@ html, body {
   overflow: hidden;
 }
 
-/* ===== HEADER ===== */
+/* =========================
+   HEADER
+   ========================= */
 .header {
   display: grid;
   grid-template-columns: 22px 1fr;
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
-  background: linear-gradient(#f2f6fb, #e4edf7);
+  background: linear-gradient(#e9eef5, #dbe3ec);
   border-bottom: 1px solid #b7cbe3;
   font-size: 12px;
   font-weight: 600;
 }
 
-/* ===== CONTENT ===== */
+.header img {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* =========================
+   CONTENU
+   ========================= */
 .content {
   width: 640px;
   margin: 0 auto;
@@ -44,7 +58,9 @@ html, body {
   overflow-y: auto;
 }
 
-/* ===== TABLE ===== */
+/* =========================
+   TABLE MESSAGE
+   ========================= */
 .mail-table {
   width: 100%;
   border-collapse: collapse;
@@ -55,7 +71,9 @@ html, body {
 .mail-table td {
   border: 1px solid #c6d6ea;
   padding: 4px 6px;
-  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mail-table th {
@@ -64,68 +82,86 @@ html, body {
 }
 
 .mail-table tr.selected {
-  background: #2f5fa7;
-  color: #fff;
+  background: #3e5875;
+  color: #ffffff;
 }
 
-/* ===== WARNING ===== */
+/* =========================
+   BLOCS TEXTE
+   ========================= */
 .warning {
   margin-top: 6px;
   padding: 6px 8px;
   background: #f5f8fc;
-  border: 1px solid #b7cbe3;
+  border: 1px solid #cdd6e3;
   border-left: 3px solid #c43030;
   border-radius: 3px;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
-/* ===== RULES ===== */
 .rules {
   margin-top: 6px;
   padding: 6px 8px;
-  background: #eef3f9;
-  border: 1px solid #b7cbe3;
+  background: #f3f6fa;
+  border: 1px solid #cdd6e3;
   border-radius: 3px;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
-.rules ol {
-  margin: 4px 0 0 16px;
-}
-
+.rules ol,
 .rules ul {
-  margin: 2px 0 0 14px;
+  margin: 4px 0 0 14px;
+  padding: 0;
 }
 
-/* ===== TEXTAREA ===== */
+/* =========================
+   COMMENTAIRE
+   ========================= */
+label {
+  display: block;
+  margin-top: 6px;
+}
+
 textarea {
   width: 100%;
-  height: 50px;
+  height: 46px;
   margin-top: 2px;
   padding: 5px;
   font-size: 11px;
   border: 1px solid #9fbad7;
   border-radius: 3px;
   resize: none;
+  background: #ffffff;
 }
 
-/* ===== QUESTION ===== */
+/* =========================
+   QUESTION FINALE
+   ========================= */
 .final-question {
   margin-top: 6px;
   font-weight: 600;
 }
 
-/* ===== FOOTER ===== */
+/* =========================
+   FOOTER
+   ========================= */
 .footer {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
   padding: 4px 10px;
   border-top: 1px solid #b7cbe3;
-  background: #f3f7fc;
+  background: #eef3f9;
 }
 
-/* ===== BUTTONS ===== */
+.footer > div {
+  display: flex;
+  gap: 8px;
+}
+
+/* =========================
+   BOUTONS
+   ========================= */
 button {
   min-width: 78px;
   padding: 4px 10px;
@@ -136,23 +172,28 @@ button {
   cursor: pointer;
 }
 
+/* bouton principal */
 #btnYes {
-  background: #2f5fa7;
-  color: white;
-  border-color: #2f5fa7;
+  background: #3e5875;
+  color: #ffffff;
+  border-color: #3e5875;
 }
 
 #btnYes:hover {
-  background: #244c86;
+  background: #2f445c;
 }
 
+/* bouton secondaire */
 #btnNo {
-  background: #e1e5ea;
+  background: #e2e6ec;
 }
 
-/* ===== HELP ===== */
+/* =========================
+   HELP
+   ========================= */
 .help {
   font-size: 10px;
-  color: #2f5fa7;
+  color: #3e5875;
   text-decoration: underline;
+  cursor: pointer;
 }
