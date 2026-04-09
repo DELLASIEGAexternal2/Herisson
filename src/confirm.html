@@ -2,13 +2,9 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Demande de confirmation – Hérisson</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demande de confirmation – PRODUCTION – 1.0.0.60</title>
 
-  <!-- Office.js -->
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-
-  <!-- MSAL -->
   <script src="https://alcdn.msauth.net/browser/2.38.1/js/msal-browser.min.js"></script>
 
   <link rel="stylesheet" href="confirm.css" />
@@ -19,18 +15,18 @@
 
     <!-- HEADER -->
     <div class="header">
-      <img src="../assets/icon-32.png" alt="Hérisson" />
+      <img src="../assets/icon-32.png" alt="Hérisson">
       <span>Demande de confirmation – PRODUCTION – 1.0.0.60</span>
     </div>
 
     <!-- CONTENT -->
     <div class="content">
 
-      <!-- TABLE MESSAGE -->
+      <!-- TABLEAU MESSAGE (IDENTIQUE VSTO) -->
       <table class="mail-table">
         <thead>
           <tr>
-            <th>Émetteur</th>
+            <th>Emetteur</th>
             <th>Objet</th>
             <th>Date</th>
           </tr>
@@ -44,40 +40,66 @@
         </tbody>
       </table>
 
-      <!-- WARNING -->
-      <div class="warning">
-        <strong>Vous êtes sur le point de signaler le message suspect suivant :</strong><br><br>
-        En confirmant, ce mail suspect sera envoyé afin d’être analysé.
-        <br><br>
-        <b>Attention :</b> le bouton <b>Signaler</b> n’est pas un anti-spam.
-        Il génère une alerte traitée manuellement par les analystes du CERT‑BdF.
-      </div>
+      <!-- TEXTE PRINCIPAL -->
+      <p class="intro">
+        <strong>Vous êtes sur le point de signaler le message suspect suivant :</strong>
+      </p>
 
-      <!-- RULES -->
+      <p class="confirm">
+        <strong>En confirmant, ce mail suspect sera envoyé afin d’être analysé.</strong>
+      </p>
+
+      <p class="attention">
+        <strong>Attention !</strong> Le bouton <strong>Signaler</strong> n’est pas un anti-spam.
+        Il génère des alertes traitées manuellement par les analystes du CERT‑BdF,
+        et donne lieu à une analyse systématique (sauf lors des campagnes internes).
+        <br>
+        Il sert à identifier rapidement, avec votre aide, des messages frauduleux
+        qui pourraient porter atteinte à la sécurité du Système d’Information.
+        <br>
+        Si vous remplissez les critères ci-dessous, signalez votre message.
+        Sinon, vous pouvez simplement supprimer ce message de votre boîte aux lettres.
+      </p>
+
+      <!-- BONNES PRATIQUES -->
       <div class="rules">
         <strong>Bonnes pratiques de signalement</strong>
         <ol>
-          <li>Vérifier que le message ne provient pas d’une adresse interne Banque de France.</li>
-          <li>Contrôler que l’expéditeur correspond bien à l’entreprise mentionnée.</li>
-          <li>Le message est inattendu.</li>
-          <li>Présence de liens, pièces jointes ou invitation à une action douteuse.</li>
+          <li>J’ai vérifié que le message ne provient pas d’une adresse interne Banque de France</li>
+          <li>L’expéditeur externe réel du message signalé dans le bandeau en haut du message
+              ne correspond pas à l’entreprise qui me contacte</li>
+          <li>Selon moi, je n’ai pas d’un simple spam</li>
+          <li>
+            Le message, que je n’attendais pas, contient :
+            <ul>
+              <li>Une ou plusieurs pièces jointes et/ou</li>
+              <li>Des liens vers des sites Internet et/ou</li>
+              <li>M’invite à effectuer une action qui me semble douteuse au regard du contexte</li>
+            </ul>
+          </li>
         </ol>
       </div>
 
-      <!-- COMMENT -->
-      <label for="comment">Message (facultatif) :</label>
-      <textarea id="comment"
+      <!-- COMMENTAIRE -->
+      <label class="comment-label">Message (facultatif) :</label>
+      <textarea
+        id="comment"
         placeholder="Ajoutez un commentaire utile pour l’analyse du CERT…"></textarea>
+
+      <!-- QUESTION FINALE -->
+      <p class="final-question">
+        Confirmez-vous vouloir signaler ce mail ?
+      </p>
 
     </div>
 
     <!-- FOOTER -->
     <div class="footer">
-      <span class="help" id="btnHelp">Aide</span>
       <div>
-        <button id="btnNo">Non</button>
         <button id="btnYes">Oui</button>
+        <button id="btnNo">Non</button>
       </div>
+      <span class="help">Aide</span>
     </div>
 
   </div>
