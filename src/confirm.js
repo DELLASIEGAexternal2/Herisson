@@ -19,7 +19,9 @@ function handleMailData(arg) {
     new Date(mailData.date).toLocaleString();
 }
 
-/* MSAL */
+/* =========================
+   MSAL
+   ========================= */
 const msalInstance = new msal.PublicClientApplication({
   auth: {
     clientId: "e92a8324-40d8-4ce5-876d-99df6b07acf9",
@@ -43,10 +45,33 @@ async function getToken() {
   }
 }
 
+/* =========================
+   LOADER UI
+   ========================= */
+function showLoader() {
+  document.getElementById("loader").style.display = "flex";
+}
+
+function hideLoader() {
+  document.getElementById("loader").style.display = "none";
+}
+
+/* =========================
+   SEND MAIL FINAL DEMO
+   ========================= */
 async function sendMail() {
   try {
+    // 🔥 animation bouton
+    const btn = document.getElementById("btnYes");
+    btn.innerText = "Envoi...";
+    btn.disabled = true;
+    document.getElementById("btnNo").disabled = true;
+
+    showLoader();
+
     const token = await getToken();
 
+    // 🔥 récupération EML
     const mailResponse = await fetch(
       `https://graph.microsoft.com/v1.0/me/messages/${mailData.itemId}/$value`,
       { headers: { Authorization: `Bearer ${token}` } }
@@ -58,6 +83,7 @@ async function sendMail() {
     const comment =
       document.getElementById("comment").value || "Aucun commentaire";
 
+    // 🔥 envoi Graph
     await fetch("https://graph.microsoft.com/v1.0/me/sendMail", {
       method: "POST",
       headers: {
@@ -97,9 +123,20 @@ async function sendMail() {
       })
     });
 
-    alert("Signalement envoyé ✔");
-    Office.context.ui.closeContainer();
+    // 🔥 SUCCESS FLOW
+    btn.innerText = "✔ Envoyé";
+
+    setTimeout(() => {
+      Office.context.ui.closeContainer();
+    }, 1200);
+
   } catch (e) {
+    hideLoader();
+
     alert("Erreur ❌ " + e.message);
+
+    document.getElementById("btnYes").innerText = "Oui";
+    document.getElementById("btnYes").disabled = false;
+    document.getElementById("btnNo").disabled = false;
   }
 }
