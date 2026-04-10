@@ -48,6 +48,27 @@ body {
 }
 
 
+/* =========================================================
+   QUESTION FINALE – Mise en valeur forte 
+   ========================================================= */
+.final-question {
+  margin: 6px auto 4px auto;        /* proche des boutons */
+  padding: 6px 10px;
+
+  text-align: center;
+  font-weight: 800;
+  font-size: 12px;
+  color: #0c3c78;
+
+  border: 2px solid #9fbad7;
+  border-radius: 4px;
+  background: linear-gradient(#f4f7fb, #e9eef5);
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.25),
+    inset 0 0 4px rgba(12, 60, 120, 0.15);
+}
+
 
 
 
