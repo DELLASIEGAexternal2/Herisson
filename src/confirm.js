@@ -49,11 +49,13 @@ async function getToken() {
    LOADER UI
    ========================= */
 function showLoader() {
-  document.getElementById("loader").style.display = "flex";
+  const loader = document.getElementById("loader");
+  if (loader) loader.style.display = "flex";
 }
 
 function hideLoader() {
-  document.getElementById("loader").style.display = "none";
+  const loader = document.getElementById("loader");
+  if (loader) loader.style.display = "none";
 }
 
 /* =========================
@@ -61,7 +63,7 @@ function hideLoader() {
    ========================= */
 async function sendMail() {
   try {
-    // 🔥 animation bouton
+    // animation bouton
     const btn = document.getElementById("btnYes");
     btn.innerText = "Envoi...";
     btn.disabled = true;
@@ -71,7 +73,7 @@ async function sendMail() {
 
     const token = await getToken();
 
-    // 🔥 récupération EML
+    //  récupération EML
     const mailResponse = await fetch(
       `https://graph.microsoft.com/v1.0/me/messages/${mailData.itemId}/$value`,
       { headers: { Authorization: `Bearer ${token}` } }
@@ -83,7 +85,7 @@ async function sendMail() {
     const comment =
       document.getElementById("comment").value || "Aucun commentaire";
 
-    // 🔥 envoi Graph
+    // envoi Graph
     await fetch("https://graph.microsoft.com/v1.0/me/sendMail", {
       method: "POST",
       headers: {
@@ -92,7 +94,7 @@ async function sendMail() {
       },
       body: JSON.stringify({
         message: {
-          subject: "🚨 Signalement Hérisson",
+          subject: "Signalement Hérisson",
           body: {
             contentType: "HTML",
             content: `
@@ -123,7 +125,7 @@ async function sendMail() {
       })
     });
 
-    // 🔥 SUCCESS FLOW
+    // SUCCESS 
     btn.innerText = "✔ Envoyé";
 
     setTimeout(() => {
