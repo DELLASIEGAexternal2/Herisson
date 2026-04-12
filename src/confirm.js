@@ -14,7 +14,7 @@ Office.onReady(() => {
 
   if (btnYes) btnYes.onclick = sendMail;
 
-  // ✅ FIX NON
+  // NON
   if (btnNo) {
     btnNo.onclick = (e) => {
       e.preventDefault();
@@ -24,7 +24,7 @@ Office.onReady(() => {
     };
   }
 
-  // ✅ FIX AIDE
+  // AIDE
   if (helpBtn) {
     helpBtn.onclick = (e) => {
       e.preventDefault();
@@ -37,6 +37,9 @@ Office.onReady(() => {
 
 function handleMailData(arg) {
   mailData = JSON.parse(arg.message);
+
+  console.log("MAIL DATA:", mailData); // 🔥 DEBUG IMPORTANT
+
   document.getElementById("sender").innerText = mailData.sender || "—";
   document.getElementById("subject").innerText = mailData.subject || "—";
   document.getElementById("date").innerText =
@@ -93,11 +96,27 @@ function openHelp() {
 }
 
 /* =========================
-   SEND MAIL
+   SEND MAIL (SAFE VERSION)
    ========================= */
-async function sendMail() {
+let isSending = false; // anti double clic
+
+async function sendMail(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  if (isSending) return; //  bloque double clic
+  isSending = true;
+
   try {
+
+    if (!mailData || !mailData.itemId) {
+      throw new Error("Mail non chargé correctement");
+    }
+
     const btn = document.getElementById("btnYes");
+
     btn.innerText = "Envoi...";
     btn.disabled = true;
     document.getElementById("btnNo").disabled = true;
@@ -105,56 +124,72 @@ async function sendMail() {
     showLoader();
 
     const token = await getToken();
+    console.log("TOKEN OK");
 
     const mailResponse = await fetch(
       `https://graph.microsoft.com/v1.0/me/messages/${mailData.itemId}/$value`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
+    if (!mailResponse.ok) {
+      throw new Error("Erreur récupération mail");
+    }
+
     const eml = await mailResponse.text();
+    console.log("MAIL FETCH OK");
+
     const base64 = btoa(unescape(encodeURIComponent(eml)));
 
     const comment =
       document.getElementById("comment").value || "Aucun commentaire";
 
-    await fetch("https://graph.microsoft.com/v1.0/me/sendMail", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: {
-          subject: "Signalement Hérisson",
-          body: {
-            contentType: "HTML",
-            content: `
-              <b>Signalement utilisateur</b><br><br>
-              Expéditeur : ${mailData.sender}<br>
-              Sujet : ${mailData.subject}<br>
-              Date : ${mailData.date}<br><br>
-              <b>Commentaire :</b><br>${comment}
-            `
-          },
-          toRecipients: [
-            {
-              emailAddress: {
-                address:
-                  "PrimoSylvestreDELLASIEGA-NKOUME@dscoie091.onmicrosoft.com"
+    const sendResponse = await fetch(
+      "https://graph.microsoft.com/v1.0/me/sendMail",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: {
+            subject: "Signalement Hérisson",
+            body: {
+              contentType: "HTML",
+              content: `
+                <b>Signalement utilisateur</b><br><br>
+                Expéditeur : ${mailData.sender}<br>
+                Sujet : ${mailData.subject}<br>
+                Date : ${mailData.date}<br><br>
+                <b>Commentaire :</b><br>${comment}
+              `
+            },
+            toRecipients: [
+              {
+                emailAddress: {
+                  address:
+                    "PrimoSylvestreDELLASIEGA-NKOUME@dscoie091.onmicrosoft.com"
+                }
               }
-            }
-          ],
-          attachments: [
-            {
-              "@odata.type": "#microsoft.graph.fileAttachment",
-              name: "mail.eml",
-              contentType: "message/rfc822",
-              contentBytes: base64
-            }
-          ]
-        }
-      })
-    });
+            ],
+            attachments: [
+              {
+                "@odata.type": "#microsoft.graph.fileAttachment",
+                name: "mail.eml",
+                contentType: "message/rfc822",
+                contentBytes: base64
+              }
+            ]
+          }
+        })
+      }
+    );
+
+    if (!sendResponse.ok) {
+      throw new Error("Erreur envoi Graph");
+    }
+
+    console.log("SEND OK");
 
     btn.innerText = "✔ Envoyé";
 
@@ -163,6 +198,9 @@ async function sendMail() {
     }, 1200);
 
   } catch (e) {
+
+    console.error(e);
+
     hideLoader();
 
     alert("Erreur ❌ " + e.message);
@@ -170,5 +208,7 @@ async function sendMail() {
     document.getElementById("btnYes").innerText = "Oui";
     document.getElementById("btnYes").disabled = false;
     document.getElementById("btnNo").disabled = false;
+
+    isSending = false;
   }
 }
