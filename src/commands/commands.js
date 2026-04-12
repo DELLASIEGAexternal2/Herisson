@@ -18,18 +18,18 @@ function openConfirmDialog(event) {
 
     const dialogUrl = "https://dellasiegaexternal2.github.io/Herisson/src/confirm.html";
 
-    const mailData = {
-      subject: item.subject,
-      sender: item.from?.emailAddress,
-      senderName: item.from?.displayName,
-      date: item.dateTimeCreated,
+const mailData = {
+  subject: item.subject,
+  sender: item.from?.emailAddress,
+  senderName: item.from?.displayName,
+  date: item.dateTimeCreated,
 
-      // 🔥 CRITIQUE
-      itemId: Office.context.mailbox.convertToRestId(
-        item.itemId,
-        Office.MailboxEnums.RestVersion.v2_0
-      )
-    };
+  // 🔥 CRITIQUE
+  itemId: Office.context.mailbox.convertToRestId(
+    item.itemId,
+    Office.MailboxEnums.RestVersion.v2_0
+  )
+};
 
     Office.context.ui.displayDialogAsync(
       dialogUrl,
@@ -41,30 +41,24 @@ function openConfirmDialog(event) {
       (asyncResult) => {
 
         if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-          console.error("Dialog error:", asyncResult.error);
+          console.error(asyncResult.error);
           return;
         }
 
         const dialog = asyncResult.value;
 
-        // 🔥 sécurisation envoi data
         setTimeout(() => {
-          try {
-            dialog.messageChild(JSON.stringify(mailData));
-            console.log("DATA SENT TO DIALOG");
-          } catch (err) {
-            console.error("MessageChild error:", err);
-          }
+          dialog.messageChild(JSON.stringify(mailData));
         }, 800);
       }
     );
 
   } catch (e) {
-    console.error("GLOBAL ERROR:", e);
+    console.error(e);
   }
 
   event.completed();
 }
 
-// 🔥 CRITIQUE (OBLIGATOIRE)
+// 🔥 CRITIQUE
 Office.actions.associate("openConfirmDialog", openConfirmDialog);
