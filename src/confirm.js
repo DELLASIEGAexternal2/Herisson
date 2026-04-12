@@ -54,7 +54,12 @@ async function getToken() {
     return r.accessToken;
   }
 }
-
+function openHelp() {
+  Office.context.ui.displayDialogAsync(
+    "https://dellasiegaexternal2.github.io/Herisson/support.html",
+    { height: 50, width: 40 }
+  );
+}
 function showLoader() {
   const loader = document.getElementById("loader");
   if (loader) loader.style.display = "flex";
