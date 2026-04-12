@@ -1,14 +1,38 @@
 let mailData = null;
 
 Office.onReady(() => {
+  console.log("CONFIRM READY");
+
   Office.context.ui.addHandlerAsync(
     Office.EventType.DialogParentMessageReceived,
     handleMailData
   );
 
-  document.getElementById("btnYes").onclick = sendMail;
-  document.getElementById("btnNo").onclick = () =>
-    Office.context.ui.closeContainer();
+  const btnYes = document.getElementById("btnYes");
+  const btnNo = document.getElementById("btnNo");
+  const helpBtn = document.getElementById("helpBtn");
+
+  if (btnYes) btnYes.onclick = sendMail;
+
+  // ✅ FIX NON
+  if (btnNo) {
+    btnNo.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log("CLICK NON");
+      Office.context.ui.closeContainer();
+    };
+  }
+
+  // ✅ FIX AIDE
+  if (helpBtn) {
+    helpBtn.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log("CLICK HELP");
+      openHelp();
+    };
+  }
 });
 
 function handleMailData(arg) {
@@ -46,7 +70,7 @@ async function getToken() {
 }
 
 /* =========================
-   LOADER UI
+   LOADER
    ========================= */
 function showLoader() {
   const loader = document.getElementById("loader");
@@ -59,11 +83,20 @@ function hideLoader() {
 }
 
 /* =========================
-   SEND MAIL FINAL DEMO
+   HELP
+   ========================= */
+function openHelp() {
+  Office.context.ui.displayDialogAsync(
+    "https://dellasiegaexternal2.github.io/Herisson/support.html",
+    { height: 50, width: 40 }
+  );
+}
+
+/* =========================
+   SEND MAIL
    ========================= */
 async function sendMail() {
   try {
-    // animation bouton
     const btn = document.getElementById("btnYes");
     btn.innerText = "Envoi...";
     btn.disabled = true;
@@ -73,7 +106,6 @@ async function sendMail() {
 
     const token = await getToken();
 
-    //  récupération EML
     const mailResponse = await fetch(
       `https://graph.microsoft.com/v1.0/me/messages/${mailData.itemId}/$value`,
       { headers: { Authorization: `Bearer ${token}` } }
@@ -85,7 +117,6 @@ async function sendMail() {
     const comment =
       document.getElementById("comment").value || "Aucun commentaire";
 
-    // envoi Graph
     await fetch("https://graph.microsoft.com/v1.0/me/sendMail", {
       method: "POST",
       headers: {
@@ -125,7 +156,6 @@ async function sendMail() {
       })
     });
 
-    // SUCCESS 
     btn.innerText = "✔ Envoyé";
 
     setTimeout(() => {
