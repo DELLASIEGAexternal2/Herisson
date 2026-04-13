@@ -1,8 +1,17 @@
-let mailData = null;
+/* =====================================================
+   CONFIRM.JS — VERSION FINALE STABLE
+   ===================================================== */
 
+let mailData = null;
+let isSending = false;
+
+/* =========================
+   INIT
+   ========================= */
 Office.onReady(() => {
   console.log("CONFIRMATION PRÊTE");
 
+  // Réception des données depuis commands.js
   Office.context.ui.addHandlerAsync(
     Office.EventType.DialogParentMessageReceived,
     handleMailData
@@ -14,36 +23,41 @@ Office.onReady(() => {
 
   if (btnYes) btnYes.onclick = sendMail;
 
-  // NON
   if (btnNo) {
     btnNo.onclick = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log("CLICK NON");
       Office.context.ui.closeContainer();
     };
   }
 
-  // AIDE
   if (helpBtn) {
     helpBtn.onclick = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log("CLIQUER SUR AIDE");
       openHelp();
     };
   }
 });
 
+/* =========================
+   DATA MAIL
+   ========================= */
 function handleMailData(arg) {
   mailData = JSON.parse(arg.message);
 
-  console.log("MAIL DATA:", mailData); //  DEBUG IMPORTANT
+  console.log("MAIL DATA:", mailData);
 
-  document.getElementById("sender").innerText = mailData.sender || "—";
-  document.getElementById("subject").innerText = mailData.subject || "—";
+  document.getElementById("sender").innerText =
+    mailData.sender || "—";
+
+  document.getElementById("subject").innerText =
+    mailData.subject || "—";
+
   document.getElementById("date").innerText =
-    new Date(mailData.date).toLocaleString();
+    mailData.date
+      ? new Date(mailData.date).toLocaleString()
+      : "—";
 }
 
 /* =========================
@@ -96,36 +110,35 @@ function openHelp() {
 }
 
 /* =========================
-   SEND MAIL (SAFE VERSION)
+   SEND MAIL
    ========================= */
-let isSending = false; // anti double clic
-
 async function sendMail(e) {
   if (e) {
     e.preventDefault();
     e.stopPropagation();
   }
 
-  if (isSending) return; //  bloque double clic
+  if (isSending) return;
   isSending = true;
 
-  try {
+  const btnYes = document.getElementById("btnYes");
+  const btnNo = document.getElementById("btnNo");
 
+  try {
     if (!mailData || !mailData.itemId) {
       throw new Error("Mail non chargé correctement");
     }
 
-    const btn = document.getElementById("btnYes");
-
-    btn.innerText = "Envoi...";
-    btn.disabled = true;
-    document.getElementById("btnNo").disabled = true;
+    btnYes.innerText = "Envoi...";
+    btnYes.disabled = true;
+    btnNo.disabled = true;
 
     showLoader();
 
     const token = await getToken();
     console.log("TOKEN OK");
 
+    // Récupération du mail en EML
     const mailResponse = await fetch(
       `https://graph.microsoft.com/v1.0/me/messages/${mailData.itemId}/$value`,
       { headers: { Authorization: `Bearer ${token}` } }
@@ -136,13 +149,12 @@ async function sendMail(e) {
     }
 
     const eml = await mailResponse.text();
-    console.log("MAIL FETCH OK");
-
     const base64 = btoa(unescape(encodeURIComponent(eml)));
 
     const comment =
       document.getElementById("comment").value || "Aucun commentaire";
 
+    // Envoi du signalement
     const sendResponse = await fetch(
       "https://graph.microsoft.com/v1.0/me/sendMail",
       {
@@ -191,23 +203,33 @@ async function sendMail(e) {
 
     console.log("SEND OK");
 
-    btn.innerText = "✔ Envoyé";
+    btnYes.innerText = "✔ Envoyé";
 
+    // POPUP INFORMATION (APRÈS SUCCÈS)
+    Office.context.ui.displayDialogAsync(
+      "https://dellasiegaexternal2.github.io/Herisson/src/popup-info.html",
+      {
+        height: 35,
+        width: 50,
+        displayInIframe: true
+      }
+    );
+
+    // Fermeture de la fenêtre de confirmation
     setTimeout(() => {
       Office.context.ui.closeContainer();
-    }, 1200);
+    }, 300);
 
   } catch (e) {
-
     console.error(e);
 
     hideLoader();
 
     alert("Erreur ❌ " + e.message);
 
-    document.getElementById("btnYes").innerText = "Oui";
-    document.getElementById("btnYes").disabled = false;
-    document.getElementById("btnNo").disabled = false;
+    btnYes.innerText = "Oui";
+    btnYes.disabled = false;
+    btnNo.disabled = false;
 
     isSending = false;
   }
