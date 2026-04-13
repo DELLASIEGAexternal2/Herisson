@@ -2,26 +2,6 @@ let mailData = null;
 
 Office.onReady(() => {
   console.log("CONFIRMATION PRÊTE");
-  // début de la pop-info
-  btn.innerText = "✔ Envoyé"; 
-
-Office.context.ui.displayDialogAsync(
-  "https://dellasiegaexternal2.github.io/Herisson/src/popup-info.html",
-  {
-    height: 35,
-    width: 50,
-    displayInIframe: true
-  }
-);
-
-// On ferme la fenêtre de confirmation
-setTimeout(() => {
-  Office.context.ui.closeContainer();
-}, 300);
-
-// fin de la pop-info
-  
-  
 
   Office.context.ui.addHandlerAsync(
     Office.EventType.DialogParentMessageReceived,
