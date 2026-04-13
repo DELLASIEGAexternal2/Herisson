@@ -1,7 +1,7 @@
 let mailData = null;
 
 Office.onReady(() => {
-  console.log("CONFIRM READY");
+  console.log("CONFIRMATION PRÊTE");
 
   Office.context.ui.addHandlerAsync(
     Office.EventType.DialogParentMessageReceived,
@@ -29,7 +29,7 @@ Office.onReady(() => {
     helpBtn.onclick = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log("CLICK HELP");
+      console.log("CLIQUER SUR AIDE");
       openHelp();
     };
   }
@@ -38,7 +38,7 @@ Office.onReady(() => {
 function handleMailData(arg) {
   mailData = JSON.parse(arg.message);
 
-  console.log("MAIL DATA:", mailData); // 🔥 DEBUG IMPORTANT
+  console.log("MAIL DATA:", mailData); //  DEBUG IMPORTANT
 
   document.getElementById("sender").innerText = mailData.sender || "—";
   document.getElementById("subject").innerText = mailData.subject || "—";
