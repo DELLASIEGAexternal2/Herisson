@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Information</title>
+  <style>
+    body {
+      font-family: Segoe UI, Arial;
+      padding: 20px;
+    }
+    button {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h3>Information</h3>
+  <p>
+    ⓘLe message a été posté avec succès et a été placé dans la Corbeille.<br><br>
+    Vous serez informé(e) des résultats de l’analyse dès que celle-ci aura abouti.
+  </p>
+
+  <button onclick="Office.context.ui.messageParent('close')">
+    OK
+  </button>
+
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+</body>
+</html>
