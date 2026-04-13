@@ -1,0 +1,31 @@
+<svg width="48" height="48" viewBox="0 0 100 100"
+     xmlns="http://www.w3.org/2000/svg"
+     fill="none">
+
+  <!-- Cercle externe (optionnel, comme l'icône i) -->
+  <circle cx="50" cy="50" r="48" fill="#E5F1FB"/>
+
+  <!-- Groupe de points -->
+  <g transform-origin="50 50">
+    <circle cx="50" cy="10" r="5" fill="#0078D4"/>
+    <circle cx="70" cy="15" r="5" fill="#2B88D8"/>
+    <circle cx="85" cy="30" r="5" fill="#5AA0E6"/>
+    <circle cx="90" cy="50" r="5" fill="#8CBCEB"/>
+    <circle cx="85" cy="70" r="5" fill="#B7D6F2"/>
+    <circle cx="70" cy="85" r="5" fill="#D6EAF8"/>
+    <circle cx="50" cy="90" r="5" fill="#EAF4FC"/>
+    <circle cx="30" cy="85" r="5" fill="#D6EAF8"/>
+    <circle cx="15" cy="70" r="5" fill="#B7D6F2"/>
+    <circle cx="10" cy="50" r="5" fill="#8CBCEB"/>
+    <circle cx="15" cy="30" r="5" fill="#5AA0E6"/>
+    <circle cx="30" cy="15" r="5" fill="#2B88D8"/>
+
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 50 50"
+      to="360 50 50"
+      dur="1s"
+      repeatCount="indefinite"/>
+  </g>
+</svg>
