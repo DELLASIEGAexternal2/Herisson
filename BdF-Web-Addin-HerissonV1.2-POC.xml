@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+xsi:type="MailApp">
+
+  <Id>6099aca9-0721-4eb1-9d8b-f495c0da79c3</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Banque de France</ProviderName>
+  <DefaultLocale>fr-FR</DefaultLocale>
+
+  <DisplayName DefaultValue="Herisson_V1.2"/>
+  <Description DefaultValue="Signalement de mails"/>
+
+  <IconUrl DefaultValue="https://dellasiegaexternal2.github.io/Herisson/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://dellasiegaexternal2.github.io/Herisson/assets/icon-128.png"/>
+
+  <AppDomains>
+    <AppDomain>https://dellasiegaexternal2.github.io</AppDomain>
+  </AppDomains>
+
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.5"/>
+    </Sets>
+  </Requirements>
+
+
+<FormSettings>
+  <Form xsi:type="ItemRead">
+    <DesktopSettings>
+      <SourceLocation DefaultValue="https://dellasiegaexternal2.github.io/Herisson/src/confirm.html"/>
+      <RequestedHeight>250</RequestedHeight>
+    </DesktopSettings>
+  </Form>
+</FormSettings>
+
+
+  
+
+  <Permissions>ReadWriteItem</Permissions>
+
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
+  </Rule>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides"
+  xsi:type="VersionOverridesV1_0">
+
+    <Hosts>
+      <Host xsi:type="MailHost">
+
+        <DesktopFormFactor>
+
+          <FunctionFile resid="Commands.Url"/>
+
+          <ExtensionPoint xsi:type="MessageReadCommandSurface">
+
+            <OfficeTab id="TabDefault">
+
+              <Group id="HerissonGroup">
+                <Label resid="GroupLabel"/>
+
+                <Control xsi:type="Button" id="ReportButton">
+
+                  <Label resid="Button.Label"/>
+
+                  <Supertip>
+                    <Title resid="Button.Label"/>
+                    <Description resid="Button.Tooltip"/>
+                  </Supertip>
+
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16"/>
+                    <bt:Image size="32" resid="Icon.32x32"/>
+                    <bt:Image size="80" resid="Icon.80x80"/>
+                  </Icon>
+
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>openConfirmDialog</FunctionName>
+                  </Action>
+
+                </Control>
+
+              </Group>
+
+            </OfficeTab>
+
+          </ExtensionPoint>
+
+        </DesktopFormFactor>
+
+      </Host>
+    </Hosts>
+
+    <Resources>
+
+      <bt:Images>
+        <bt:Image id="Icon.16x16" DefaultValue="https://dellasiegaexternal2.github.io/Herisson/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://dellasiegaexternal2.github.io/Herisson/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://dellasiegaexternal2.github.io/Herisson/assets/icon-80.png"/>
+      </bt:Images>
+
+      <bt:Urls>
+        <bt:Url id="Commands.Url" DefaultValue="https://dellasiegaexternal2.github.io/Herisson/src/commands/commands.html"/>
+      </bt:Urls>
+
+      <bt:ShortStrings>
+        <bt:String id="GroupLabel" DefaultValue="Herisson"/>
+        <bt:String id="Button.Label" DefaultValue="Signaler"/>
+      </bt:ShortStrings>
+
+      <bt:LongStrings>
+        <bt:String id="Button.Tooltip" DefaultValue="Signaler un mail suspect"/>
+      </bt:LongStrings>
+
+    </Resources>
+ 
+  <!-- APP AZURE ID AJOUT ICI (CRITIQUE) -->
+ <WebApplicationInfo>
+  <Id>e92a8324-40d8-4ce5-876d-99df6b07acf9</Id>
+  <Resource>api://e92a8324-40d8-4ce5-876d-99df6b07acf9</Resource>
+  <Scopes>
+    <Scope>access_as_user</Scope>
+  </Scopes>
+</WebApplicationInfo>
+    
+  </VersionOverrides>
+
+</OfficeApp>
